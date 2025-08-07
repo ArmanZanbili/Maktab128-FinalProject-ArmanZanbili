@@ -6,3 +6,5 @@ export default createMiddleware(routing);
 export const config = {
     matcher: ['/', '/(fa|en)/:path*']
 };
+
+export { auth as middleware } from "@/src/lib/auth"
