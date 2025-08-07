@@ -15,9 +15,24 @@
         "title": "ورود به حساب کاربری",
         "username": "نام کاربری",
         "password": "رمز عبور",
-        "submit": "ورود"
+        "submit": "ورود",
+        "signupPrompt": "حساب کاربری ندارید؟",
+        "signupLink": "ثبت نام کنید"
+    },
+    "SignupPage": {
+        "title": "ایجاد حساب کاربری جدید",
+        "firstname": "نام",
+        "lastname": "نام خانوادگی",
+        "username": "نام کاربری",
+        "password": "رمز عبور",
+        "phoneNumber": "شماره تلفن",
+        "address": "آدرس",
+        "submit": "ثبت نام",
+        "loginPrompt": "قبلا ثبت‌نام کرده‌اید؟",
+        "loginLink": "وارد شوید"
     },
     "Form": {
-        "requiredError": "این فیلد الزامی است."
+        "requiredError": "این فیلد الزامی است.",
+        "back": "بازگشت"
     }
 }

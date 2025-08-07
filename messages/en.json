@@ -15,9 +15,24 @@
         "title": "Login to your Account",
         "username": "Username",
         "password": "Password",
-        "submit": "Login"
+        "submit": "Login",
+        "signupPrompt": "Don't have an account?",
+        "signupLink": "Sign up"
+    },
+    "SignupPage": {
+        "title": "Create a New Account",
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "username": "Username",
+        "password": "Password",
+        "phoneNumber": "Phone Number",
+        "address": "Address",
+        "submit": "Sign Up",
+        "loginPrompt": "Already have an account?",
+        "loginLink": "Log in"
     },
     "Form": {
-        "requiredError": "This field is required."
+        "requiredError": "This field is required.",
+        "back": "Back"
     }
 }
