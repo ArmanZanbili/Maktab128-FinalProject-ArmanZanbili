@@ -1,0 +1,23 @@
+{
+    "Navigation": {
+        "home": "Home",
+        "login": "Login",
+        "logout": "Logout",
+        "language": "Language",
+        "shopName": "My Shop"
+    },
+    "HomePage": {
+        "title": "Welcome to My Shop!",
+        "subtitle": "Discover our latest collection of amazing products.",
+        "cta": "Explore Products"
+    },
+    "LoginPage": {
+        "title": "Login to your Account",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Login"
+    },
+    "Form": {
+        "requiredError": "This field is required."
+    }
+}
