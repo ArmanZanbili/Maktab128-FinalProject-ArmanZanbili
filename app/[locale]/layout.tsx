@@ -6,14 +6,21 @@ import { ThemeProvider } from '@/src/providers/ThemeProvider';
 import { ToastContainer } from 'react-toastify';
 import { Header } from '@/src/components/organisms/Header';
 
-export default async function LocaleLayout({ children, params: { locale } }: { children: React.ReactNode; params: { locale: string } }) {
+type Props = {
+  children: React.ReactNode;
+  params: { locale: string };
+};
+
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
   const messages = await getMessages();
+
   return (
     <html lang={locale} dir={locale === 'fa' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="relative flex min-h-screen flex-col">
+            <div className="relative flex min-h-screen flex-col gap-5">
               <Header />
               <main className="flex-1">{children}</main>
             </div>
