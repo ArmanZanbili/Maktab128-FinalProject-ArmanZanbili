@@ -4,12 +4,32 @@
         "login": "Login",
         "logout": "Logout",
         "language": "Language",
-        "shopName": "My Shop"
+        "shopName": "My Website"
     },
     "HomePage": {
-        "title": "Welcome to My Shop!",
+        "title": "Welcome to My Website!",
         "subtitle": "Discover our latest collection of amazing products.",
-        "cta": "Explore Products"
+        "cta": "Explore Products",
+        "featuredTitle": "Featured Products",
+        "addToCart": "Add to Cart",
+        "products": {
+            "watch": {
+                "name": "Classic Leather Watch",
+                "price": "$150.00"
+            },
+            "headphones": {
+                "name": "Wireless Headphones",
+                "price": "$99.99"
+            },
+            "lamp": {
+                "name": "Modern Desk Lamp",
+                "price": "$75.50"
+            },
+            "candle": {
+                "name": "Scented Soy Candle",
+                "price": "$25.00"
+            }
+        }
     },
     "LoginPage": {
         "title": "Login to your Account",

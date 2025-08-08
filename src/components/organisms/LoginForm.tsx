@@ -14,13 +14,14 @@ export function LoginForm() {
     return (
         <div className="w-full max-w-sm">
             <form className="grid gap-4">
-                <div className="grid gap-2">
+                <div className="mt-8 grid gap-2">
                     <Label htmlFor="username">{t('username')}</Label>
-                    <Input id="username" placeholder="your-username" type="text" />
+                    <Input id="username" placeholder="Username" type="text" />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="password">{t('password')}</Label>
-                    <Input id="password" type="password" />
+                    <Input id="password"
+                        placeholder='Password' type="password" />
                 </div>
 
                 <div className="flex flex-col gap-2 pt-2">

@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { LanguageSwitcher } from '../molecules/LanguageSwitcher';
 import { ShoppingBag } from 'lucide-react';
 import { signOutAction } from '@/src/actions/authActions';
+import { ThemeSwitcher } from '../molecules/ThemeSwitcher';
 
 function SignOutButton({ logoutText }: { logoutText: string }) {
     return (
@@ -18,13 +19,14 @@ export async function Header() {
     const session = await auth();
     const t = await getTranslations('Navigation');
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-black">
+        <header className="sticky top-0 z-50 w-full border-b bg-header-background">
             <div className="flex px-10 h-16 items-center">
                 <Link href="/" className="mr-6 flex items-center space-x-2 rtl:space-x-reverse">
                     <ShoppingBag className="h-6 w-6" />
                     <span className="font-bold sm:inline-block">{t('shopName')}</span>
                 </Link>
                 <div className="flex flex-1 items-center justify-end space-x-4">
+                    <ThemeSwitcher />
                     <LanguageSwitcher />
 
                     {session?.user ? (
