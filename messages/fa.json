@@ -36,8 +36,11 @@
         "username": "نام کاربری",
         "password": "رمز عبور",
         "submit": "ورود",
+        "submitting": "در حال ورود...",
         "signupPrompt": "حساب کاربری ندارید؟",
-        "signupLink": "ثبت نام کنید"
+        "signupLink": "ثبت نام کنید",
+        "success": "ورود با موفقیت انجام شد!",
+        "error": "ورود ناموفق بود. لطفا اطلاعات خود را بررسی کنید."
     },
     "SignupPage": {
         "title": "ایجاد حساب کاربری جدید",
@@ -48,11 +51,32 @@
         "phoneNumber": "شماره تلفن",
         "address": "آدرس",
         "submit": "ثبت نام",
+        "submitting": "در حال ثبت نام...",
         "loginPrompt": "قبلا ثبت‌نام کرده‌اید؟",
-        "loginLink": "وارد شوید"
+        "loginLink": "وارد شوید",
+        "success": "ثبت نام موفقیت آمیز بود! لطفا وارد شوید.",
+        "error": "خطایی غیرمنتظره در هنگام ثبت نام رخ داد.",
+        "conflictError": "کاربری با این مشخصات قبلا ثبت نام کرده است."
     },
     "Form": {
-        "requiredError": "این فیلد الزامی است.",
-        "back": "بازگشت"
+        "back": "بازگشت",
+        "Errors": {
+            "firstname_required": "نام الزامی است.",
+            "lastname_required": "نام خانوادگی الزامی است.",
+            "username_required": "نام کاربری الزامی است.",
+            "username_min": "نام کاربری باید حداقل ۳ کاراکتر باشد.",
+            "password_required": "رمز عبور الزامی است.",
+            "password_min": "رمز عبور باید حداقل ۸ کاراکتر باشد.",
+            "phoneNumber_required": "شماره تلفن الزامی است.",
+            "phoneNumber_min": "شماره تلفن معتبر وارد کنید.",
+            "address_required": "آدرس الزامی است.",
+            "address_min": "آدرس باید حداقل ۵ کاراکتر باشد."
+        }
+    },
+    "Header": {
+        "adminMenuLabel": "پنل ادمین",
+        "userMenuLabel": "حساب کاربری",
+        "dashboard": "داشبورد",
+        "profile": "پروفایل"
     }
 }

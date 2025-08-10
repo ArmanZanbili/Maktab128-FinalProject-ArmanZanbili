@@ -4,20 +4,24 @@ import { Link } from '@/i18n/navigation';
 import { Button } from '../ui/button';
 import { LanguageSwitcher } from '../molecules/LanguageSwitcher';
 import { ShoppingBag } from 'lucide-react';
-import { signOutAction } from '@/src/actions/authActions';
 import { ThemeSwitcher } from '../molecules/ThemeSwitcher';
-
-function SignOutButton({ logoutText }: { logoutText: string }) {
-    return (
-        <form action={signOutAction}>
-            <Button type="submit" variant="secondary">{logoutText}</Button>
-        </form>
-    );
-}
+import { AdminMenu } from '../molecules/AdminMenu';
+import { UserMenu } from '../molecules/UserMenu';
 
 export async function Header() {
     const session = await auth();
     const t = await getTranslations('Navigation');
+
+    const renderAuthComponent = () => {
+        if (!session?.user) {
+            return <Button asChild><Link href="/login">{t('login')}</Link></Button>;
+        }
+        if (session.user.role === 'ADMIN') {
+            return <AdminMenu />;
+        }
+        return <UserMenu username={session.user.name} />;
+    };
+
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-header-background">
             <div className="flex px-10 h-16 items-center">
@@ -28,14 +32,7 @@ export async function Header() {
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <ThemeSwitcher />
                     <LanguageSwitcher />
-
-                    {session?.user ? (
-                        <SignOutButton logoutText={t('logout')} />
-                    ) : (
-                        <Button asChild>
-                            <Link href="/login">{t('login')}</Link>
-                        </Button>
-                    )}
+                    {renderAuthComponent()}
                 </div>
             </div>
         </header>

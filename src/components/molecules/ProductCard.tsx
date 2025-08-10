@@ -6,9 +6,10 @@ type ProductCardProps = {
     price: string;
     imageUrl: string;
     buttonText: string;
+    priority?: boolean;
 };
 
-export function ProductCard({ name, price, imageUrl, buttonText }: ProductCardProps) {
+export function ProductCard({ name, price, imageUrl, buttonText, priority = false }: ProductCardProps) {
     return (
         <div className="group relative overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-transform duration-300 ease-in-out hover:-translate-y-2">
             <div className="aspect-square overflow-hidden bg-gray-100">
@@ -18,6 +19,7 @@ export function ProductCard({ name, price, imageUrl, buttonText }: ProductCardPr
                     width={400}
                     height={400}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    priority={priority}
                 />
             </div>
             <div className="p-4">

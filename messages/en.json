@@ -36,8 +36,11 @@
         "username": "Username",
         "password": "Password",
         "submit": "Login",
+        "submitting": "Logging in...",
         "signupPrompt": "Don't have an account?",
-        "signupLink": "Sign up"
+        "signupLink": "Sign up",
+        "success": "Login successful!",
+        "error": "Login failed. Please check your credentials."
     },
     "SignupPage": {
         "title": "Create a New Account",
@@ -48,11 +51,32 @@
         "phoneNumber": "Phone Number",
         "address": "Address",
         "submit": "Sign Up",
+        "submitting": "Signing up...",
         "loginPrompt": "Already have an account?",
-        "loginLink": "Log in"
+        "loginLink": "Log in",
+        "success": "Signup successful! Please log in.",
+        "error": "An unexpected error occurred during signup.",
+        "conflictError": "A user with these details already exists."
     },
     "Form": {
-        "requiredError": "This field is required.",
-        "back": "Back"
+        "back": "Back",
+        "Errors": {
+            "firstname_required": "First name is required.",
+            "lastname_required": "Last name is required.",
+            "username_required": "Username is required.",
+            "username_min": "Username must be at least 3 characters.",
+            "password_required": "Password is required.",
+            "password_min": "Password must be at least 8 characters.",
+            "phoneNumber_required": "Phone number is required.",
+            "phoneNumber_min": "A valid phone number is required.",
+            "address_required": "Address is required.",
+            "address_min": "Address must be at least 5 characters."
+        }
+    },
+    "Header": {
+        "adminMenuLabel": "Admin Panel",
+        "userMenuLabel": "My Account",
+        "dashboard": "Dashboard",
+        "profile": "Profile"
     }
 }
