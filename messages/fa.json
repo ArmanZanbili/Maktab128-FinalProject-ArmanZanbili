@@ -4,30 +4,138 @@
         "login": "ورود",
         "logout": "خروج",
         "language": "زبان",
-        "shopName": "وبسایت من"
+        "shopName": "فیلمِتو",
+        "basket": "سبد خرید"
     },
     "HomePage": {
-        "title": "به وبسایت من خوش آمدید!",
-        "subtitle": "جدیدترین مجموعه محصولات شگفت انگیز ما را کشف کنید.",
-        "cta": "مشاهده محصولات",
-        "featuredTitle": "محصولات ویژه",
-        "addToCart": "افزودن به سبد خرید",
-        "products": {
-            "watch": {
-                "name": "ساعت چرمی کلاسیک",
-                "price": "۱۵۰.۰۰ دلار"
+        "heroTitle": "تمام فیلم‌های مورد علاقه شما",
+        "heroSubtitle": "بهترین فیلم‌ها، از کلاسیک‌های ماندگار تا بلاک‌باسترهای مدرن را پیدا و خریداری کنید.",
+        "heroCta": "مشاهده مجموعه",
+        "featuredFilms": "فیلم‌های منتخب",
+        "buyNow": "خرید",
+        "currencySymbol": "ریال",
+        "addedToCart": "به سبد خرید اضافه شد!",
+        "removedFromCart": "از سبد خرید حذف شد.",
+        "movies": {
+            "inception": {
+                "title": "تلقین",
+                "price": "۵۰۰,۰۰۰",
+                "ageRating": "+۱۳",
+                "duration": "۲ ساعت و ۲۸ دقیقه",
+                "genres": "اکشن, علمی-تخیلی",
+                "year": "۲۰۱۰",
+                "summary": "یک دزد ماهر که اسرار شرکت‌ها را با استفاده از فناوری اشتراک رویا می‌دزدد...",
+                "rating": "۸.۸",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/inception.jpg"
             },
-            "headphones": {
-                "name": "هدفون بی سیم بلوتوث",
-                "price": "۹۹.۹۹ دلار"
+            "interstellar": {
+                "title": "میان‌ستاره‌ای",
+                "price": "۶۵۰,۰۰۰",
+                "ageRating": "+۱۳",
+                "duration": "۲ ساعت و ۴۹ دقیقه",
+                "genres": "ماجراجویی, علمی-تخیلی",
+                "year": "۲۰۱۴",
+                "summary": "تیمی از کاوشگران برای اطمینان از بقای بشریت، از طریق یک کرم‌چاله در فضا سفر می‌کنند.",
+                "rating": "۸.۶",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/interstellar.jpg"
             },
-            "lamp": {
-                "name": "چراغ رومیزی مدرن",
-                "price": "۷۵.۵۰ دلار"
+            "darkKnight": {
+                "title": "شوالیه تاریکی",
+                "price": "۶۰۰,۰۰۰",
+                "ageRating": "+۱۳",
+                "duration": "۲ ساعت و ۳۲ دقیقه",
+                "genres": "اکشن, جنایی",
+                "year": "۲۰۱۰",
+                "summary": "وقتی تهدیدی به نام جوکر شهر گاتهام را به آشوب می‌کشد...",
+                "rating": "۹.۰",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/dark-knight.jpg"
             },
-            "candle": {
-                "name": "شمع معطر سویا",
-                "price": "۲۵.۰۰ دلار"
+            "harryPotter1": {
+                "title": "هری پاتر و سنگ جادو",
+                "price": "۴۵۰,۰۰۰",
+                "ageRating": "PG",
+                "duration": "۲ ساعت و ۳۲ دقیقه",
+                "genres": "فانتزی, ماجراجویی",
+                "year": "۲۰۰۱",
+                "summary": "پسر یتیمی در مدرسه جادوگری ثبت نام می‌کند...",
+                "rating": "۷.۶",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/harry-potter-and-the-sorcerer-s-stone.jpg"
+            },
+            "avengers": {
+                "title": "انتقام‌جویان",
+                "price": "۵۵۰,۰۰۰",
+                "ageRating": "+۱۳",
+                "duration": "۲ ساعت و ۲۳ دقیقه",
+                "genres": "اکشن, علمی-تخیلی",
+                "year": "۲۰۱۲",
+                "summary": "قدرتمندترین قهرمانان زمین باید گرد هم آیند...",
+                "rating": "۸.۰",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/the-avengers.jpg"
+            },
+            "jumpstreet21": {
+                "title": "خیابان جامپ شماره ۲۱",
+                "price": "۳۵۰,۰۰۰",
+                "ageRating": "+۱۸",
+                "duration": "۱ ساعت و ۴۹ دقیقه",
+                "genres": "اکشن, کمدی",
+                "year": "۲۰۱۲",
+                "summary": "یک زوج پلیس ناموفق به یک دبیرستان محلی فرستاده می‌شوند...",
+                "rating": "۷.۲",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/21-jump-street.jpg"
+            },
+            "aboutTime": {
+                "title": "درباره زمان",
+                "price": "۴۰۰,۰۰۰",
+                "ageRating": "+۱۸",
+                "duration": "۲ ساعت و ۳ دقیقه",
+                "genres": "کمدی, درام",
+                "year": "۲۰۱۳",
+                "summary": "در سن ۲۱ سالگی، تیم متوجه می‌شود که می‌تواند در زمان سفر کند...",
+                "rating": "۷.۸",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/about-time.jpg"
+            },
+            "badBoys": {
+                "title": "پسران بد",
+                "price": "۳۰۰,۰۰۰",
+                "ageRating": "+۱۸",
+                "duration": "۱ ساعت و ۵۹ دقیقه",
+                "genres": "اکشن, کمدی",
+                "year": "۱۹۹۵",
+                "summary": "دو کارآگاه جذاب از یک شاهد قتل محافظت می‌کنند...",
+                "rating": "۶.۸",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/bad-boys.jpg"
+            },
+            "dune": {
+                "title": "تل‌ماسه",
+                "price": "۷۰۰,۰۰۰",
+                "ageRating": "+۱۳",
+                "duration": "۲ ساعت و ۳۵ دقیقه",
+                "genres": "اکشن, ماجراجویی",
+                "year": "۲۰۲۱",
+                "summary": "یک خانواده اشرافی درگیر جنگی برای کنترل با ارزش‌ترین دارایی کهکشان می‌شوند...",
+                "rating": "۸.۰",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/dune.jpg"
+            },
+            "despicableMe": {
+                "title": "من نفرت‌انگیز",
+                "price": "۴۰۰,۰۰۰",
+                "ageRating": "PG",
+                "duration": "۱ ساعت و ۳۵ دقیقه",
+                "genres": "انیمیشن, کمدی",
+                "year": "۲۰۱۰",
+                "summary": "یک مغز متفکر جنایتکار از سه دختر یتیم به عنوان مهره استفاده می‌کند...",
+                "rating": "۷.۶",
+                "ratingLabel": "IMDb",
+                "imageUrl": "/posters/despicable-me.jpg"
             }
         }
     },
@@ -59,7 +167,7 @@
         "conflictError": "کاربری با این مشخصات قبلا ثبت نام کرده است."
     },
     "Form": {
-        "back": "بازگشت",
+        "back": "Back",
         "Errors": {
             "firstname_required": "نام الزامی است.",
             "lastname_required": "نام خانوادگی الزامی است.",

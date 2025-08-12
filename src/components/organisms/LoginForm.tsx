@@ -37,13 +37,11 @@ export function LoginForm() {
                 <div className="mt-8 grid gap-2">
                     <Label htmlFor="username">{t('username')}</Label>
                     <Input id="username" {...register('username')} />
-                    {/* This line will now work correctly */}
                     {errors.username && <p className="text-sm text-red-500">{formT(errors.username.message as any)}</p>}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="password">{t('password')}</Label>
                     <Input id="password" type="password" {...register('password')} />
-                    {/* This line will now work correctly */}
                     {errors.password && <p className="text-sm text-red-500">{formT(errors.password.message as any)}</p>}
                 </div>
                 <div className="flex flex-col gap-2 pt-2">

@@ -9,7 +9,7 @@ export default function MainLayout({ children }: Props) {
   return (
     <div className="relative flex min-h-screen flex-col gap-5">
       <Header />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 px-8">{children}</main>
       <Footer />
     </div>
   );

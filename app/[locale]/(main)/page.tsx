@@ -1,6 +1,11 @@
-import { ProductGrid } from '@/src/components/organisms/ProductGrid';
-
+import { Hero } from '@/src/components/organisms/Hero';
+import { MovieGrid } from '@/src/components/organisms/MovieGrid';
 
 export default function HomePage() {
-  return <ProductGrid />;
+  return (
+    <>
+      <Hero />
+      <MovieGrid />
+    </>
+  );
 }
