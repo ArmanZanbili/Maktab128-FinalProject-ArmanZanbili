@@ -5,7 +5,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/src/providers/ThemeProvider';
 import { Bounce, ToastContainer } from 'react-toastify';
 import { SessionProvider } from 'next-auth/react';
-import { Inter, Vazirmatn } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
 const inter = Inter({
@@ -14,22 +14,10 @@ const inter = Inter({
     variable: '--font-inter',
 });
 
-const vazirmatn = Vazirmatn({
-    subsets: ['arabic'],
-    display: 'swap',
-    variable: '--font-vazirmatn',
-});
-
 const sahel = localFont({
     src: '../../public/fonts/Sahel/Sahel.woff2',
     display: 'swap',
     variable: '--font-sahel',
-});
-
-const bon = localFont({
-    src: '../../public/fonts/Bon/Webfonts/Woff2/bon-Medium.woff2',
-    display: 'swap',
-    variable: '--font-bon',
 });
 
 type Props = {
@@ -38,7 +26,6 @@ type Props = {
 };
 
 export default async function LocaleLayout({ children }: Props) {
-
     const locale = await getLocale();
     const messages = await getMessages();
 
@@ -46,7 +33,7 @@ export default async function LocaleLayout({ children }: Props) {
         <html
             lang={locale}
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            className={`${inter.variable} ${sahel.variable} ${bon.variable}`}
+            className={`${inter.variable} ${sahel.variable}`}
             suppressHydrationWarning
         >
             <body className={locale === 'fa' ? 'font-sahel' : 'font-sans'}>

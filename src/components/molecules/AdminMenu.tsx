@@ -22,7 +22,7 @@ export function AdminMenu() {
                 <DropdownMenuLabel>{tHeader('adminMenuLabel')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href="/admin/dashboard">
+                    <Link href="/admin">
                         <FaChartLine className="mr-2 h-4 w-4" />
                         <span>{tHeader('dashboard')}</span>
                     </Link>

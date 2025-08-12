@@ -3,7 +3,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { signIn } from 'next-auth/react';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 import { Loader2 } from 'lucide-react';
@@ -18,6 +20,7 @@ export function LoginForm() {
     const t = useTranslations('LoginPage');
     const formT = useTranslations('Form');
     const router = useRouter();
+    const locale = useLocale();
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({
         resolver: zodResolver(loginSchema),
@@ -27,7 +30,11 @@ export function LoginForm() {
         try {
             const result = await signIn('credentials', { redirect: false, username: data.username, password: data.password });
             if (result?.error) { toast.error(t('error')); }
-            else if (result?.ok) { toast.success(t('success')); router.push('/'); router.refresh(); }
+            else if (result?.ok) {
+                toast.success(t('success'));
+                router.push(`/${locale}/`);
+                router.refresh();
+            }
         } catch (error) { toast.error('An unexpected error occurred.'); }
     };
 

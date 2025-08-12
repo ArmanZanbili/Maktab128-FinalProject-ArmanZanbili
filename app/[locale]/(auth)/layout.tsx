@@ -1,13 +1,10 @@
-import { Header } from "@/src/components/organisms/Header";
-
 type Props = {
     children: React.ReactNode;
 };
 
 export default function AuthLayout({ children }: Props) {
     return (
-        <div className="flex flex-col w-dvw justify-center items-center bg-muted/40">
-            <Header />
+        <div className="flex min-h-screen w-full items-center justify-center bg-muted/40 p-4">
             {children}
         </div>
     );

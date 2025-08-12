@@ -139,6 +139,17 @@
             }
         }
     },
+    "AdminSidebar": {
+        "shopName": "پنل فیلمِتو",
+        "search": "جستجو...",
+        "dashboard": "داشبورد",
+        "products": "محصولات",
+        "projects": "پروژه‌ها",
+        "reporting": "گزارش‌ها",
+        "users": "کاربران",
+        "support": "پشتیبانی",
+        "settings": "تنظیمات"
+    },
     "LoginPage": {
         "title": "ورود به حساب کاربری",
         "username": "نام کاربری",

@@ -139,6 +139,17 @@
             }
         }
     },
+    "AdminSidebar": {
+        "shopName": "Filmetto Panel",
+        "search": "Search...",
+        "dashboard": "Dashboard",
+        "products": "Products",
+        "projects": "Projects",
+        "reporting": "Reporting",
+        "users": "Users",
+        "support": "Support",
+        "settings": "Settings"
+    },
     "LoginPage": {
         "title": "Login to your Account",
         "username": "Username",
