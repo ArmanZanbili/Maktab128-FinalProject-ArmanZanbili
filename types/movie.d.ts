@@ -11,3 +11,28 @@ export type MovieCardProps = {
     imageUrl: string;
     priority?: boolean;
 };
+
+export type Category = {
+    _id: string;
+    name: string;
+    icon?: string;
+};
+
+export type Subcategory = {
+    _id: string;
+    name: string;
+    category: string;
+};
+
+export type Movie = {
+    _id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    brand: string;
+    description: string;
+    category: Category;
+    subcategory: Subcategory;
+    thumbnail: string;
+    images: string[];
+};

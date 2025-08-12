@@ -143,9 +143,9 @@
         "shopName": "پنل فیلمِتو",
         "search": "جستجو...",
         "dashboard": "داشبورد",
-        "products": "محصولات",
-        "projects": "پروژه‌ها",
-        "reporting": "گزارش‌ها",
+        "movies": "فیلم‌ها",
+        "categories": "دسته‌بندی‌ها",
+        "subcategories": "زیرمجموعه‌ها",
         "users": "کاربران",
         "support": "پشتیبانی",
         "settings": "تنظیمات"
@@ -196,6 +196,7 @@
         "adminMenuLabel": "پنل ادمین",
         "userMenuLabel": "حساب کاربری",
         "dashboard": "داشبورد",
-        "profile": "پروفایل"
+        "profile": "پروفایل",
+        "logout": "خروج"
     }
 }

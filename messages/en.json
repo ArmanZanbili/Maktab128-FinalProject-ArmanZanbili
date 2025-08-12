@@ -143,9 +143,9 @@
         "shopName": "Filmetto Panel",
         "search": "Search...",
         "dashboard": "Dashboard",
-        "products": "Products",
-        "projects": "Projects",
-        "reporting": "Reporting",
+        "movies": "Movies",
+        "categories": "Categories",
+        "subcategories": "Subcategories",
         "users": "Users",
         "support": "Support",
         "settings": "Settings"
@@ -196,6 +196,7 @@
         "adminMenuLabel": "Admin Panel",
         "userMenuLabel": "My Account",
         "dashboard": "Dashboard",
-        "profile": "Profile"
+        "profile": "Profile",
+        "logout": "Log Out"
     }
 }
