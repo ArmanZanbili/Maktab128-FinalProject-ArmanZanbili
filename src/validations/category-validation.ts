@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const categoryFormSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters."),
+    name: z.string().min(2, "Admin.validation.name_min_2"),
     icon: z.any().optional(),
 });
 

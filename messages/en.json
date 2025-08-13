@@ -139,17 +139,6 @@
             }
         }
     },
-    "AdminSidebar": {
-        "shopName": "Filmetto Panel",
-        "search": "Search...",
-        "dashboard": "Dashboard",
-        "movies": "Movies",
-        "categories": "Categories",
-        "subcategories": "Subcategories",
-        "users": "Users",
-        "support": "Support",
-        "settings": "Settings"
-    },
     "LoginPage": {
         "title": "Login to your Account",
         "username": "Username",
@@ -198,5 +187,102 @@
         "dashboard": "Dashboard",
         "profile": "Profile",
         "logout": "Log Out"
+    },
+    "Admin": {
+        "sidebar": {
+            "shopName": "Filmetto Panel",
+            "search": "Search...",
+            "admin": "Admin",
+            "dashboard": "Dashboard",
+            "movies": "Movies",
+            "categories": "Categories",
+            "subcategories": "Subcategories",
+            "users": "Users",
+            "support": "Support",
+            "settings": "Settings"
+        },
+        "dashboard": {
+            "title": "Admin Dashboard",
+            "salesCard": "Daily Sales",
+            "ordersCard": "Daily Orders",
+            "productsCard": "Products by Group",
+            "stockCard": "Out of Stock %",
+            "chartSoon": "Chart coming soon",
+            "gaugeSoon": "Gauge coming soon",
+            "recentOrders": "Recent Orders",
+            "orderListSoon": "Order list coming soon..."
+        },
+        "categories": {
+            "title": "Categories",
+            "description": "Manage your movie categories here.",
+            "add": "Add Category",
+            "edit": "Edit Category",
+            "deleteTitle": "Are you sure?",
+            "deleteDescription": "This will permanently delete the category and all its subcategories.",
+            "form": {
+                "nameLabel": "Category Name",
+                "iconLabel": "Icon (Optional)",
+                "namePlaceholder": "e.g., Action",
+                "saveButton": "Save Category"
+            }
+        },
+        "subcategories": {
+            "title": "Subcategories",
+            "description": "Manage your movie subcategories here.",
+            "add": "Add Subcategory",
+            "edit": "Edit Subcategory",
+            "deleteTitle": "Are you sure?",
+            "deleteDescription": "This will permanently delete the subcategory.",
+            "form": {
+                "nameLabel": "Subcategory Name",
+                "parentLabel": "Parent Category",
+                "namePlaceholder": "e.g., Sci-Fi",
+                "parentPlaceholder": "Select a parent category",
+                "saveButton": "Save Subcategory"
+            }
+        },
+        "movies": {
+            "title": "Movies",
+            "description": "Manage your movies, categories, and subcategories.",
+            "add": "Add Movie",
+            "edit": "Edit Movie",
+            "deleteTitle": "Are you absolutely sure?",
+            "deleteDescription": "This will permanently delete the movie.",
+            "dialog": {
+                "addTitle": "Add New Movie",
+                "editTitle": "Edit Movie",
+                "addDescription": "Fill out the form below to add a new movie.",
+                "editDescription": "Fill out the form below to update the movie."
+            }
+        },
+        "common": {
+            "actions": "Actions",
+            "edit": "Edit",
+            "delete": "Delete",
+            "cancel": "Cancel",
+            "continue": "Continue",
+            "name": "Name",
+            "icon": "Icon",
+            "price": "Price",
+            "quantity": "Quantity",
+            "image": "Image",
+            "successUpdate": "Updated successfully!",
+            "successCreate": "Created successfully!",
+            "successDelete": "Deleted successfully!",
+            "error": "An error occurred.",
+            "errorDelete": "Failed to delete."
+        },
+        "validation": {
+            "name_min_2": "Name must be at least 2 characters.",
+            "name_min_3": "Name must be at least 3 characters.",
+            "price_required": "Price is required.",
+            "price_invalid": "Price must be a valid number.",
+            "quantity_required": "Quantity is required.",
+            "quantity_invalid": "Quantity must be a whole number.",
+            "brand_required": "Brand is required.",
+            "description_min_10": "Description must be at least 10 characters.",
+            "category_required": "Category is required.",
+            "subcategory_required": "Subcategory is required."
+        }
     }
 }

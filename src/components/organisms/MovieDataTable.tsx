@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/src/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/src/components/ui/alert-dialog";
@@ -14,6 +15,8 @@ import { MovieDialog } from "./MovieDialog";
 import { Movie } from "@/types/movie";
 
 export function MoviesDataTable({ initialData }: { initialData: any }) {
+    const t = useTranslations('Admin.movies');
+    const tCommon = useTranslations('Admin.common');
     const router = useRouter();
     const [movies, setMovies] = useState<Movie[]>(initialData.data?.products || []);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -24,22 +27,22 @@ export function MoviesDataTable({ initialData }: { initialData: any }) {
         try {
             if (selectedMovie) {
                 await updateMovie(selectedMovie._id, formData);
-                toast.success("Movie updated successfully!");
+                toast.success(tCommon('successUpdate'));
             } else {
                 await createMovie(formData);
-                toast.success("Movie created successfully!");
+                toast.success(tCommon('successCreate'));
             }
             setSelectedMovie(null);
             router.refresh();
-        } catch (error) { toast.error("An error occurred."); }
+        } catch (error) { toast.error(tCommon('error')); }
     };
 
     const handleDelete = async () => {
         if (selectedMovie) {
             try {
                 await deleteMovie(selectedMovie._id);
-                toast.success("Movie deleted successfully!");
-            } catch (error) { toast.error("Failed to delete movie."); }
+                toast.success(tCommon('successDelete'));
+            } catch (error) { toast.error(tCommon('errorDelete')); }
             finally {
                 setIsAlertOpen(false);
                 setSelectedMovie(null);
@@ -62,18 +65,18 @@ export function MoviesDataTable({ initialData }: { initialData: any }) {
         <div>
             <div className="flex justify-end mb-4">
                 <Button onClick={() => openDialog()}>
-                    <FaPlus className="mr-2 h-4 w-4" /> Add Movie
+                    <FaPlus className="mr-2 h-4 w-4" /> {t('add')}
                 </Button>
             </div>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="hidden w-[100px] sm:table-cell">Image</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Price</TableHead>
-                            <TableHead>Quantity</TableHead>
-                            <TableHead>Actions</TableHead>
+                            <TableHead className="hidden w-[100px] sm:table-cell">{tCommon('image')}</TableHead>
+                            <TableHead>{tCommon('name')}</TableHead>
+                            <TableHead>{tCommon('price')}</TableHead>
+                            <TableHead>{tCommon('quantity')}</TableHead>
+                            <TableHead>{tCommon('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -97,9 +100,9 @@ export function MoviesDataTable({ initialData }: { initialData: any }) {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem onSelect={() => openDialog(movie)}>Edit</DropdownMenuItem>
-                                            <DropdownMenuItem onSelect={() => openAlertDialog(movie)}>Delete</DropdownMenuItem>
+                                            <DropdownMenuLabel>{tCommon('actions')}</DropdownMenuLabel>
+                                            <DropdownMenuItem onSelect={() => openDialog(movie)}>{tCommon('edit')}</DropdownMenuItem>
+                                            <DropdownMenuItem onSelect={() => openAlertDialog(movie)}>{tCommon('delete')}</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
@@ -114,12 +117,13 @@ export function MoviesDataTable({ initialData }: { initialData: any }) {
             )}
             <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
                 <AlertDialogContent>
-                    <AlertDialogHeader><AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle><AlertDialogDescription>
-                        This will permanently delete the movie.
-                    </AlertDialogDescription></AlertDialogHeader>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('deleteTitle')}</AlertDialogTitle>
+                        <AlertDialogDescription>{t('deleteDescription')}</AlertDialogDescription>
+                    </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSelectedMovie(null)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+                        <AlertDialogCancel onClick={() => setSelectedMovie(null)}>{tCommon('cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{tCommon('continue')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

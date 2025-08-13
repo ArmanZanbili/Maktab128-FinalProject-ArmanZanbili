@@ -29,7 +29,9 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 
 export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | null; onSubmit: (data: FormData) => void; onFinished: () => void; }) {
-    const t = useTranslations('AdminSidebar');
+    const t = useTranslations('Admin.movies.form');
+    const tValidation = useTranslations('Admin.validation');
+
     const [categories, setCategories] = useState<Category[]>([]);
     const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
@@ -51,15 +53,14 @@ export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | nul
     useEffect(() => {
         getCategories({ limit: 100 })
             .then(res => setCategories(res.data.categories))
-            .catch(err => {
-                console.error(err);
-                toast.error("Failed to load categories.");
-            });
+            .catch(() => toast.error("Failed to load categories."));
     }, []);
 
     useEffect(() => {
         if (selectedCategory) {
-            getSubcategories({ category: selectedCategory, limit: 100 }).then(res => setSubcategories(res.data.subcategories));
+            getSubcategories({ category: selectedCategory, limit: 100 })
+                .then(res => setSubcategories(res.data.subcategories))
+                .catch(() => toast.error("Failed to load subcategories."));
             form.setValue('subcategory', '');
         } else {
             setSubcategories([]);
@@ -75,7 +76,7 @@ export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | nul
             } else if (key === 'images' && value?.length) {
                 for (let i = 0; i < value.length; i++) formData.append('images', value[i]);
             } else if (value !== undefined && value !== null && value !== '') {
-                formData.append(key, value);
+                formData.append(key, String(value));
             }
         });
         onSubmit(formData);
@@ -87,77 +88,77 @@ export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | nul
             <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto pr-4">
                 <FormField control={form.control} name="name" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Movie Title</FormLabel>
-                        <FormControl><Input placeholder="e.g., Inception" {...field} /></FormControl>
-                        <FormMessage />
+                        <FormLabel>{t('titleLabel')}</FormLabel>
+                        <FormControl><Input placeholder={t('titlePlaceholder')} {...field} /></FormControl>
+                        <FormMessage>{form.formState.errors.name && tValidation(form.formState.errors.name.message as any)}</FormMessage>
                     </FormItem>
                 )} />
                 <div className="grid grid-cols-2 gap-4">
                     <FormField control={form.control} name="price" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Price</FormLabel>
-                            <FormControl><Input type="number" placeholder="e.g., 19.99" {...field} /></FormControl>
-                            <FormMessage />
+                            <FormLabel>{t('priceLabel')}</FormLabel>
+                            <FormControl><Input type="number" placeholder={t('pricePlaceholder')} {...field} /></FormControl>
+                            <FormMessage>{form.formState.errors.price && tValidation(form.formState.errors.price.message as any)}</FormMessage>
                         </FormItem>
                     )} />
                     <FormField control={form.control} name="quantity" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Quantity</FormLabel>
-                            <FormControl><Input type="number" placeholder="e.g., 100" {...field} /></FormControl>
-                            <FormMessage />
+                            <FormLabel>{t('quantityLabel')}</FormLabel>
+                            <FormControl><Input type="number" placeholder={t('quantityPlaceholder')} {...field} /></FormControl>
+                            <FormMessage>{form.formState.errors.quantity && tValidation(form.formState.errors.quantity.message as any)}</FormMessage>
                         </FormItem>
                     )} />
                 </div>
                 <FormField control={form.control} name="brand" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Brand / Studio</FormLabel>
-                        <FormControl><Input placeholder="e.g., Warner Bros." {...field} /></FormControl>
-                        <FormMessage />
+                        <FormLabel>{t('brandLabel')}</FormLabel>
+                        <FormControl><Input placeholder={t('brandPlaceholder')} {...field} /></FormControl>
+                        <FormMessage>{form.formState.errors.brand && tValidation(form.formState.errors.brand.message as any)}</FormMessage>
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="category" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>{t('categoryLabel')}</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl><SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl>
+                            <FormControl><SelectTrigger><SelectValue placeholder={t('categoryPlaceholder')} /></SelectTrigger></FormControl>
                             <SelectContent>{categories.map((cat) => <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>)}</SelectContent>
                         </Select>
-                        <FormMessage />
+                        <FormMessage>{form.formState.errors.category && tValidation(form.formState.errors.category.message as any)}</FormMessage>
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="subcategory" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Subcategory</FormLabel>
+                        <FormLabel>{t('subcategoryLabel')}</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value} disabled={!selectedCategory || subcategories.length === 0}>
-                            <FormControl><SelectTrigger><SelectValue placeholder="Select a subcategory" /></SelectTrigger></FormControl>
+                            <FormControl><SelectTrigger><SelectValue placeholder={t('subcategoryPlaceholder')} /></SelectTrigger></FormControl>
                             <SelectContent>{subcategories.map((sub) => <SelectItem key={sub._id} value={sub._id}>{sub.name}</SelectItem>)}</SelectContent>
                         </Select>
-                        <FormMessage />
+                        <FormMessage>{form.formState.errors.subcategory && tValidation(form.formState.errors.subcategory.message as any)}</FormMessage>
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="description" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl><Textarea placeholder="A short summary of the movie..." {...field} /></FormControl>
-                        <FormMessage />
+                        <FormLabel>{t('descriptionLabel')}</FormLabel>
+                        <FormControl><Textarea placeholder={t('descriptionPlaceholder')} {...field} /></FormControl>
+                        <FormMessage>{form.formState.errors.description && tValidation(form.formState.errors.description.message as any)}</FormMessage>
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="thumbnail" render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
-                        <FormLabel>Thumbnail Image</FormLabel>
+                        <FormLabel>{t('thumbnailLabel')}</FormLabel>
                         <FormControl><Input type="file" onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl>
                         <FormMessage />
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="images" render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
-                        <FormLabel>Gallery Images</FormLabel>
+                        <FormLabel>{t('galleryLabel')}</FormLabel>
                         <FormControl><Input type="file" multiple onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl>
                         <FormMessage />
                     </FormItem>
                 )} />
                 <Button type="submit" className="w-full">
-                    {form.formState.isSubmitting ? 'Saving...' : 'Save Movie'}
+                    {form.formState.isSubmitting ? t('savingButton') : t('saveButton')}
                 </Button>
             </form>
         </Form>

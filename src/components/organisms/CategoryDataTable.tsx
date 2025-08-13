@@ -12,7 +12,11 @@ import { createCategory, updateCategory, deleteCategory } from "@/src/services/c
 import { CategoryDialog } from "./CategoryDialog";
 import { Category } from "@/types/movie";
 
+import { useTranslations } from "next-intl";
+
 export function CategoriesDataTable({ initialData }: { initialData: any }) {
+    const t = useTranslations('Admin.categories');
+    const tCommon = useTranslations('Admin.common');
     const router = useRouter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -24,14 +28,14 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
         try {
             if (selectedCategory) {
                 await updateCategory(selectedCategory._id, formData);
-                toast.success("Category updated successfully!");
+                toast.success(tCommon('successUpdate'));
             } else {
                 await createCategory(formData);
-                toast.success("Category created successfully!");
+                toast.success(tCommon('successCreate'));
             }
             setSelectedCategory(null);
             router.refresh();
-        } catch (error) { toast.error("An error occurred."); }
+        } catch (error) { toast.error(tCommon('error')); }
     };
 
     const handleDelete = async () => {
@@ -62,16 +66,16 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
         <div>
             <div className="flex justify-end mb-4">
                 <Button onClick={() => openDialog()}>
-                    <FaPlus className="mr-2 h-4 w-4" /> Add Category
+                    <FaPlus className="mr-2 h-4 w-4" /> {t('add')}
                 </Button>
             </div>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead><span className="flex items-center justify-start ml-5 rtl:mr-5">Icon</span></TableHead>
-                            <TableHead><span className="flex items-center justify-start ml-5 rtl:mr-5">Name</span></TableHead>
-                            <TableHead><span className="flex items-center justify-end mr-5 rtl:ml-5">Actions</span></TableHead>
+                            <TableHead><span className="flex items-center justify-start ml-5 rtl:mr-5">{tCommon('icon')}</span></TableHead>
+                            <TableHead><span className="flex items-center justify-start ml-5 rtl:mr-5">{tCommon('name')}</span></TableHead>
+                            <TableHead><span className="flex items-center justify-end mr-5 rtl:ml-5">{tCommon('actions')}</span></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -129,12 +133,17 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
             )}
             <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
                 <AlertDialogContent>
-                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle><AlertDialogDescription>
-                        This will permanently delete the category and all its subcategories.
-                    </AlertDialogDescription></AlertDialogHeader>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            {t('deleteTitle')}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t('deleteDescription')}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSelectedCategory(null)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+                        <AlertDialogCancel onClick={() => setSelectedCategory(null)}>{tCommon('cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{tCommon('continue')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

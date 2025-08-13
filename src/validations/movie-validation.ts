@@ -1,21 +1,21 @@
 import { z } from 'zod';
 
 export const movieFormSchema = z.object({
-    name: z.string().min(3, "Name must be at least 3 characters."),
+    name: z.string().min(3, "Admin.validation.name_min_3"),
     price: z.string()
-        .min(1, "Price is required.")
+        .min(1, "Admin.validation.price_required")
         .refine((val) => !isNaN(parseFloat(val)), {
-            message: "Price must be a valid number.",
+            message: "Admin.validation.price_invalid",
         }),
     quantity: z.string()
-        .min(1, "Quantity is required.")
+        .min(1, "Admin.validation.quantity_required")
         .refine((val) => /^\d+$/.test(val), {
-            message: "Quantity must be a whole number.",
+            message: "Admin.validation.quantity_invalid",
         }),
-    brand: z.string().min(2, "Brand is required."),
-    description: z.string().min(10, "Description must be at least 10 characters."),
-    category: z.string().nonempty("Category is required."),
-    subcategory: z.string().nonempty("Subcategory is required."),
+    brand: z.string().min(2, "Admin.validation.brand_required"),
+    description: z.string().min(10, "Admin.validation.description_min_10"),
+    category: z.string().nonempty("Admin.validation.category_required"),
+    subcategory: z.string().nonempty("Admin.validation.subcategory_required"),
     thumbnail: z.any().optional(),
     images: z.any().optional(),
 });

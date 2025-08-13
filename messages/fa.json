@@ -139,17 +139,6 @@
             }
         }
     },
-    "AdminSidebar": {
-        "shopName": "پنل فیلمِتو",
-        "search": "جستجو...",
-        "dashboard": "داشبورد",
-        "movies": "فیلم‌ها",
-        "categories": "دسته‌بندی‌ها",
-        "subcategories": "زیرمجموعه‌ها",
-        "users": "کاربران",
-        "support": "پشتیبانی",
-        "settings": "تنظیمات"
-    },
     "LoginPage": {
         "title": "ورود به حساب کاربری",
         "username": "نام کاربری",
@@ -198,5 +187,102 @@
         "dashboard": "داشبورد",
         "profile": "پروفایل",
         "logout": "خروج"
+    },
+    "Admin": {
+        "sidebar": {
+            "shopName": "پنل فیلمِتو",
+            "search": "جستجو...",
+            "admin": "ادمین",
+            "dashboard": "داشبورد",
+            "movies": "فیلم‌ها",
+            "categories": "دسته‌بندی‌ها",
+            "subcategories": "زیرمجموعه‌ها",
+            "users": "کاربران",
+            "support": "پشتیبانی",
+            "settings": "تنظیمات"
+        },
+        "dashboard": {
+            "title": "داشبورد ادمین",
+            "salesCard": "فروش روزانه",
+            "ordersCard": "سفارشات روزانه",
+            "productsCard": "محصولات بر اساس گروه",
+            "stockCard": "درصد ناموجودی",
+            "chartSoon": "نمودار به زودی",
+            "gaugeSoon": "گیج به زودی",
+            "recentOrders": "سفارشات اخیر",
+            "orderListSoon": "لیست سفارشات به زودی..."
+        },
+        "categories": {
+            "title": "دسته‌بندی‌ها",
+            "description": "دسته‌بندی فیلم‌های خود را در اینجا مدیریت کنید.",
+            "add": "افزودن دسته‌بندی",
+            "edit": "ویرایش دسته‌بندی",
+            "deleteTitle": "آیا مطمئن هستید؟",
+            "deleteDescription": "این عمل به طور دائم دسته‌بندی و تمام زیرمجموعه‌های آن را حذف خواهد کرد.",
+            "form": {
+                "nameLabel": "نام دسته‌بندی",
+                "iconLabel": "آیکون (اختیاری)",
+                "namePlaceholder": "مثلا اکشن",
+                "saveButton": "ذخیره دسته‌بندی"
+            }
+        },
+        "subcategories": {
+            "title": "زیرمجموعه‌ها",
+            "description": "زیرمجموعه‌های فیلم خود را در اینجا مدیریت کنید.",
+            "add": "افزودن زیرمجموعه",
+            "edit": "ویرایش زیرمجموعه",
+            "deleteTitle": "آیا مطمئن هستید؟",
+            "deleteDescription": "این عمل به طور دائم این زیرمجموعه را حذف خواهد کرد.",
+            "form": {
+                "nameLabel": "نام زیرمجموعه",
+                "parentLabel": "دسته‌بندی والد",
+                "namePlaceholder": "مثلا علمی-تخیلی",
+                "parentPlaceholder": "یک دسته‌بندی والد انتخاب کنید",
+                "saveButton": "ذخیره زیرمجموعه"
+            }
+        },
+        "movies": {
+            "title": "فیلم‌ها",
+            "description": "فیلم‌ها، دسته‌بندی‌ها و زیرمجموعه‌های خود را مدیریت کنید.",
+            "add": "افزودن فیلم",
+            "edit": "ویرایش فیلم",
+            "deleteTitle": "آیا کاملا مطمئن هستید؟",
+            "deleteDescription": "این عمل به طور دائم این فیلم را حذف خواهد کرد.",
+            "dialog": {
+                "addTitle": "افزودن فیلم جدید",
+                "editTitle": "ویرایش فیلم",
+                "addDescription": "برای افزودن یک فیلم جدید، فرم زیر را پر کنید.",
+                "editDescription": "برای به‌روزرسانی فیلم، فرم زیر را پر کنید."
+            }
+        },
+        "common": {
+            "actions": "عملیات",
+            "edit": "ویرایش",
+            "delete": "حذف",
+            "cancel": "لغو",
+            "continue": "ادامه",
+            "name": "نام",
+            "icon": "آیکون",
+            "price": "قیمت",
+            "quantity": "موجودی",
+            "image": "تصویر",
+            "successUpdate": "با موفقیت به‌روزرسانی شد!",
+            "successCreate": "با موفقیت ایجاد شد!",
+            "successDelete": "با موفقیت حذف شد!",
+            "error": "خطایی رخ داد.",
+            "errorDelete": "حذف ناموفق بود."
+        },
+        "validation": {
+            "name_min_2": "نام باید حداقل ۲ کاراکتر باشد.",
+            "name_min_3": "نام باید حداقل ۳ کاراکتر باشد.",
+            "price_required": "قیمت الزامی است.",
+            "price_invalid": "قیمت باید یک عدد معتبر باشد.",
+            "quantity_required": "موجودی الزامی است.",
+            "quantity_invalid": "موجودی باید یک عدد صحیح باشد.",
+            "brand_required": "برند الزامی است.",
+            "description_min_10": "توضیحات باید حداقل ۱۰ کاراکتر باشد.",
+            "category_required": "دسته‌بندی الزامی است.",
+            "subcategory_required": "زیرمجموعه الزامی است."
+        }
     }
 }
