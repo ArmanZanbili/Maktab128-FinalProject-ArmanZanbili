@@ -222,7 +222,7 @@
             "form": {
                 "nameLabel": "نام دسته‌بندی",
                 "iconLabel": "آیکون (اختیاری)",
-                "namePlaceholder": "مثلا اکشن",
+                "namePlaceholder": "مثلا فیلم، انیمه، سریال، انیمیشن",
                 "saveButton": "ذخیره دسته‌بندی"
             }
         },
@@ -253,6 +253,26 @@
                 "editTitle": "ویرایش فیلم",
                 "addDescription": "برای افزودن یک فیلم جدید، فرم زیر را پر کنید.",
                 "editDescription": "برای به‌روزرسانی فیلم، فرم زیر را پر کنید."
+            },
+            "form": {
+                "titleLabel": "عنوان فیلم",
+                "titlePlaceholder": "مثلا تلقین",
+                "priceLabel": "قیمت",
+                "pricePlaceholder": "مثلا ۵۰۰,۰۰۰",
+                "quantityLabel": "موجودی",
+                "quantityPlaceholder": "مثلا ۱۰۰",
+                "brandLabel": "برند / استودیو",
+                "brandPlaceholder": "مثلا برادران وارنر",
+                "categoryLabel": "دسته‌بندی",
+                "categoryPlaceholder": "یک دسته‌بندی انتخاب کنید",
+                "subcategoryLabel": "زیرمجموعه",
+                "subcategoryPlaceholder": "یک زیرمجموعه انتخاب کنید",
+                "descriptionLabel": "توضیحات",
+                "descriptionPlaceholder": "خلاصه‌ای کوتاه از فیلم...",
+                "thumbnailLabel": "تصویر بندانگشتی",
+                "galleryLabel": "تصاویر گالری",
+                "saveButton": "ذخیره فیلم",
+                "savingButton": "در حال ذخیره..."
             }
         },
         "common": {

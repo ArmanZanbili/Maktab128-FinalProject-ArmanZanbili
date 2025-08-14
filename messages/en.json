@@ -222,7 +222,7 @@
             "form": {
                 "nameLabel": "Category Name",
                 "iconLabel": "Icon (Optional)",
-                "namePlaceholder": "e.g., Action",
+                "namePlaceholder": "e.g., Movie, Anime, Series, Animation",
                 "saveButton": "Save Category"
             }
         },
@@ -253,6 +253,26 @@
                 "editTitle": "Edit Movie",
                 "addDescription": "Fill out the form below to add a new movie.",
                 "editDescription": "Fill out the form below to update the movie."
+            },
+            "form": {
+                "titleLabel": "Movie Title",
+                "titlePlaceholder": "e.g., Inception",
+                "priceLabel": "Price",
+                "pricePlaceholder": "e.g., 19.99",
+                "quantityLabel": "Quantity",
+                "quantityPlaceholder": "e.g., 100",
+                "brandLabel": "Brand / Studio",
+                "brandPlaceholder": "e.g., Warner Bros.",
+                "categoryLabel": "Category",
+                "categoryPlaceholder": "Select a category",
+                "subcategoryLabel": "Subcategory",
+                "subcategoryPlaceholder": "Select a subcategory",
+                "descriptionLabel": "Description",
+                "descriptionPlaceholder": "A brief summary of the movie...",
+                "thumbnailLabel": "Thumbnail Image",
+                "galleryLabel": "Gallery Images",
+                "saveButton": "Save Movie",
+                "savingButton": "Saving..."
             }
         },
         "common": {

@@ -1,4 +1,5 @@
 'use client';
+
 import { signOut } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/src/components/ui/button';
@@ -22,7 +23,7 @@ export function AdminMenu() {
                 <DropdownMenuLabel>{tHeader('adminMenuLabel')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href="/admin">
+                    <Link href="/dashboard">
                         <FaChartLine className="mr-2 h-4 w-4" />
                         <span>{tHeader('dashboard')}</span>
                     </Link>

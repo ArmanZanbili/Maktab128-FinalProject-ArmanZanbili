@@ -21,7 +21,7 @@ export type Category = {
 export type Subcategory = {
     _id: string;
     name: string;
-    category: string;
+    category: string | category;
 };
 
 export type Movie = {
@@ -31,8 +31,8 @@ export type Movie = {
     quantity: number;
     brand: string;
     description: string;
-    category: Category;
-    subcategory: Subcategory;
+    categories: (string | Category)[];
+    subcategories: (string | Subcategory)[];
     thumbnail: string;
     images: string[];
 };

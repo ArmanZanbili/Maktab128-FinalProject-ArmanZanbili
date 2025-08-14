@@ -3,6 +3,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { loginUser } from '../services/authService';
 
+
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Credentials({

@@ -14,8 +14,8 @@ export const movieFormSchema = z.object({
         }),
     brand: z.string().min(2, "Admin.validation.brand_required"),
     description: z.string().min(10, "Admin.validation.description_min_10"),
-    category: z.string().nonempty("Admin.validation.category_required"),
-    subcategory: z.string().nonempty("Admin.validation.subcategory_required"),
+    categories: z.array(z.string()).min(1, "You must select at least one category."),
+    subcategories: z.array(z.string()).min(1, "You must select at least one subcategory."),
     thumbnail: z.any().optional(),
     images: z.any().optional(),
 });

@@ -1,13 +1,14 @@
-import axiosInstance from '../lib/axios';
+
 import { z } from 'zod';
 import { signupSchema } from '../validations/auth-validation';
+import { axiosServerInstance } from '../lib/axios-server';
 
 
 type SignupData = z.infer<typeof signupSchema>;
 
 
 export async function loginUser(username: string, password: string): Promise<any> {
-    const response = await axiosInstance.post('/auth/login', {
+    const response = await axiosServerInstance.post('/auth/login', {
         username,
         password,
     });
@@ -16,6 +17,6 @@ export async function loginUser(username: string, password: string): Promise<any
 
 
 export async function signupUser(userData: SignupData): Promise<any> {
-    const response = await axiosInstance.post('/auth/signup', userData);
+    const response = await axiosServerInstance.post('/auth/signup', userData);
     return response.data;
 }

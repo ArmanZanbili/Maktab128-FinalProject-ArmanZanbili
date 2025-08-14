@@ -2,18 +2,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@/app/globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
-import { ThemeProvider } from '@/src/providers/ThemeProvider';
-import { Bounce, ToastContainer } from 'react-toastify';
 import { SessionProvider } from 'next-auth/react';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import { PreferencesStoreProvider } from '@/src/stores/preferences-provider';
+import { getPreference } from '@/src/server/server-actions';
+import { THEME_MODE_VALUES, THEME_PRESET_VALUES, type ThemePreset, type ThemeMode } from '@/types/theme';
+import { Toaster } from '@/src/components/ui/sonner';
 
 const inter = Inter({
     subsets: ['latin'],
     display: 'swap',
     variable: '--font-inter',
 });
-
 const sahel = localFont({
     src: '../../public/fonts/Sahel/Sahel.woff2',
     display: 'swap',
@@ -29,35 +30,26 @@ export default async function LocaleLayout({ children }: Props) {
     const locale = await getLocale();
     const messages = await getMessages();
 
+    const themeMode = await getPreference<ThemeMode>("theme_mode", THEME_MODE_VALUES, "light");
+    const themePreset = await getPreference<ThemePreset>("theme_preset", THEME_PRESET_VALUES, "default");
+
     return (
         <html
             lang={locale}
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            className={`${inter.variable} ${sahel.variable}`}
+            className={`${inter.variable} ${sahel.variable} ${themeMode === "dark" ? "dark" : ""}`}
+            data-theme-preset={themePreset}
             suppressHydrationWarning
         >
             <body className={locale === 'fa' ? 'font-sahel' : 'font-sans'}>
-                <SessionProvider>
-                    <NextIntlClientProvider locale={locale} messages={messages}>
-                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
+                    <SessionProvider>
+                        <NextIntlClientProvider locale={locale} messages={messages}>
                             {children}
-                            <ToastContainer
-                                position="top-right"
-                                autoClose={5000}
-                                hideProgressBar={false}
-                                newestOnTop={false}
-                                closeButton={false}
-                                closeOnClick={true}
-                                rtl={false}
-                                pauseOnFocusLoss
-                                draggable
-                                pauseOnHover
-                                theme="colored"
-                                transition={Bounce}
-                            />
-                        </ThemeProvider>
-                    </NextIntlClientProvider>
-                </SessionProvider>
+                            <Toaster />
+                        </NextIntlClientProvider>
+                    </SessionProvider>
+                </PreferencesStoreProvider>
             </body>
         </html>
     );

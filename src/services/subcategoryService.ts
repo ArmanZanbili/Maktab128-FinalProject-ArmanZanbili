@@ -1,35 +1,28 @@
-import axiosInstance from '@/src/lib/axios';
-import { getSession } from 'next-auth/react';
+import { axiosInstance } from '@/src/lib/axios';
+import { axiosServerInstance } from '@/src/lib/axios-server';
+import { SubcategoryFormValues } from '../validations/subcategory-validation';
 
-async function getAuthHeaders() {
-    const session = await getSession();
-    if (!session?.user.accessToken) throw new Error("Not authenticated");
-    return {
-        Authorization: `Bearer ${session.user.accessToken}`,
-        'Content-Type': 'application/json',
-    };
-}
+export const getSubcategories = async (accessToken: string | null, params = {}) => {
+    const headers: { Authorization?: string } = {};
+    if (accessToken) {
+        headers.Authorization = `Bearer ${accessToken}`;
+    }
 
-export const getSubcategories = async (params = {}) => {
-    const response = await axiosInstance.get('/subcategories', { params });
+    const response = await axiosServerInstance.get('/subcategories', { params, headers });
     return response.data;
 };
 
-export const createSubcategory = async (data: { name: string; category: string }) => {
-    const headers = await getAuthHeaders();
-    const response = await axiosInstance.post('/subcategories', data, { headers });
+export const createSubcategory = async (data: SubcategoryFormValues) => {
+    const response = await axiosInstance.post('/subcategories', data);
     return response.data;
 };
 
-export const updateSubcategory = async (id: string, data: { name: string; category: string }) => {
-    const headers = await getAuthHeaders();
-    const response = await axiosInstance.patch(`/subcategories/${id}`, data, { headers });
+export const updateSubcategory = async (id: string, data: SubcategoryFormValues) => {
+    const response = await axiosInstance.patch(`/subcategories/${id}`, data);
     return response.data;
 };
 
 export const deleteSubcategory = async (id: string) => {
-    const session = await getSession();
-    const headers = { Authorization: `Bearer ${session?.user.accessToken}` };
-    const response = await axiosInstance.delete(`/subcategories/${id}`, { headers });
+    const response = await axiosInstance.delete(`/subcategories/${id}`);
     return response.data;
 };
