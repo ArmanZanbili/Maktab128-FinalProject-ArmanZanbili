@@ -27,8 +27,10 @@ import { movieFormSchema, MovieFormValues } from '@/src/validations/movie-valida
 import { Movie, Category, Subcategory } from '@/types/movie';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | null; onSubmit: (data: FormData) => void; onFinished: () => void; }) {
+    const { data: session } = useSession();
     const t = useTranslations('Admin.movies.form');
     const tValidation = useTranslations('Admin.validation');
 
@@ -43,25 +45,33 @@ export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | nul
             quantity: String(movie?.quantity || ''),
             brand: movie?.brand || "",
             description: movie?.description || "",
-            category: movie?.category._id || "",
-            subcategory: movie?.subcategory._id || "",
+            categories: movie?.categories?.map(c => typeof c === 'string' ? c : c._id) || [],
+            subcategories: movie?.subcategories?.map(s => typeof s === 'string' ? s : s._id) || [],
+            thumbnail: undefined,
+            images: undefined,
         },
     });
 
-    const selectedCategory = form.watch("category");
+    const selectedCategory = form.watch("categories");
 
     useEffect(() => {
-        getCategories({ limit: 100 })
-            .then(res => setCategories(res.data.categories))
-            .catch(() => toast.error("Failed to load categories."));
-    }, []);
+        const token = session?.user?.accessToken;
+        if (token) {
+            getCategories(token, { limit: 100 })
+                .then(res => setCategories(res.data.categories))
+                .catch(() => toast.error("Failed to load categories."));
+        }
+    }, [session]);
 
     useEffect(() => {
         if (selectedCategory) {
-            getSubcategories({ category: selectedCategory, limit: 100 })
-                .then(res => setSubcategories(res.data.subcategories))
-                .catch(() => toast.error("Failed to load subcategories."));
-            form.setValue('subcategory', '');
+            const token = session?.user?.accessToken;
+            if (token) {
+                getSubcategories(token, { categories: selectedCategory ?? null, limit: 100 })
+                    .then(res => setSubcategories(res.data.subcategories))
+                    .catch(() => toast.error("Failed to load subcategories."));
+            }
+            form.setValue('subcategories', []);
         } else {
             setSubcategories([]);
         }
@@ -116,51 +126,52 @@ export function MovieForm({ movie, onSubmit, onFinished }: { movie?: Movie | nul
                         <FormMessage>{form.formState.errors.brand && tValidation(form.formState.errors.brand.message as any)}</FormMessage>
                     </FormItem>
                 )} />
-                <FormField control={form.control} name="category" render={({ field }) => (
+                <FormField control={form.control} name="categories" render={({ field }) => (
                     <FormItem>
                         <FormLabel>{t('categoryLabel')}</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select value={field.value && field.value.length ? field.value[0] : undefined} onValueChange={(val) => field.onChange(val ? [val] : [])}>
                             <FormControl><SelectTrigger><SelectValue placeholder={t('categoryPlaceholder')} /></SelectTrigger></FormControl>
                             <SelectContent>{categories.map((cat) => <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>)}</SelectContent>
                         </Select>
-                        <FormMessage>{form.formState.errors.category && tValidation(form.formState.errors.category.message as any)}</FormMessage>
+                        <FormMessage>{form.formState.errors.categories && tValidation(form.formState.errors.categories.message as any)}</FormMessage>
                     </FormItem>
                 )} />
-                <FormField control={form.control} name="subcategory" render={({ field }) => (
+                <FormField control={form.control} name="subcategories" render={({ field }) => (
                     <FormItem>
                         <FormLabel>{t('subcategoryLabel')}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value} disabled={!selectedCategory || subcategories.length === 0}>
+                        <Select value={field.value && field.value.length ? field.value[0] : undefined} onValueChange={(val) => field.onChange(val ? [val] : [])} disabled={!selectedCategory || subcategories.length === 0}>
                             <FormControl><SelectTrigger><SelectValue placeholder={t('subcategoryPlaceholder')} /></SelectTrigger></FormControl>
                             <SelectContent>{subcategories.map((sub) => <SelectItem key={sub._id} value={sub._id}>{sub.name}</SelectItem>)}</SelectContent>
                         </Select>
-                        <FormMessage>{form.formState.errors.subcategory && tValidation(form.formState.errors.subcategory.message as any)}</FormMessage>
-                    </FormItem>
-                )} />
-                <FormField control={form.control} name="description" render={({ field }) => (
+                        <FormMessage>{form.formState.errors.subcategories && tValidation(form.formState.errors.subcategories.message as any)}</FormMessage>
+                    </FormItem >
+                )
+                } />
+                < FormField control={form.control} name="description" render={({ field }) => (
                     <FormItem>
                         <FormLabel>{t('descriptionLabel')}</FormLabel>
                         <FormControl><Textarea placeholder={t('descriptionPlaceholder')} {...field} /></FormControl>
                         <FormMessage>{form.formState.errors.description && tValidation(form.formState.errors.description.message as any)}</FormMessage>
                     </FormItem>
                 )} />
-                <FormField control={form.control} name="thumbnail" render={({ field: { onChange, value, ...rest } }) => (
+                < FormField control={form.control} name="thumbnail" render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
                         <FormLabel>{t('thumbnailLabel')}</FormLabel>
                         <FormControl><Input type="file" onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl>
                         <FormMessage />
                     </FormItem>
                 )} />
-                <FormField control={form.control} name="images" render={({ field: { onChange, value, ...rest } }) => (
+                < FormField control={form.control} name="images" render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
                         <FormLabel>{t('galleryLabel')}</FormLabel>
                         <FormControl><Input type="file" multiple onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl>
                         <FormMessage />
                     </FormItem>
                 )} />
-                <Button type="submit" className="w-full">
+                < Button type="submit" className="w-full" >
                     {form.formState.isSubmitting ? t('savingButton') : t('saveButton')}
-                </Button>
-            </form>
-        </Form>
+                </Button >
+            </form >
+        </Form >
     );
 }

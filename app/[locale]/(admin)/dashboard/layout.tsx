@@ -21,6 +21,7 @@ import { AccountSwitcher } from "./_components/sidebar/account-switcher";
 import { LayoutControls } from "./_components/sidebar/layout-controls";
 import { SearchDialog } from "./_components/sidebar/search-dialog";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
+import AxiosProvider from "@/src/providers/use-axios-provider";
 
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
@@ -41,6 +42,8 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
+
+      <AxiosProvider />
       <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
       <SidebarInset
         data-content-layout={contentLayout}
