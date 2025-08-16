@@ -3,6 +3,7 @@ import {
   ChartBarStacked,
   Clapperboard,
   type LucideIcon,
+  Warehouse,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -49,6 +50,11 @@ export const sidebarItems: NavGroup[] = [
         title: "Subcategory",
         url: "/dashboard/subcategories",
         icon: ChartBarStacked,
+      },
+      {
+        title: "Stock Management",
+        url: "/dashboard/stock",
+        icon: Warehouse,
       },
     ],
   },

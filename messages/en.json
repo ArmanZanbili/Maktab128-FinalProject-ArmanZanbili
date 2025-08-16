@@ -275,6 +275,10 @@
                 "savingButton": "Saving..."
             }
         },
+        "stock": {
+            "title": "Stock Management",
+            "description": "Quickly edit product price and quantity."
+        },
         "common": {
             "actions": "Actions",
             "edit": "Edit",

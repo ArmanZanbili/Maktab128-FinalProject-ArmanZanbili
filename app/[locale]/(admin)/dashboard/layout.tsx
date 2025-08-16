@@ -22,9 +22,19 @@ import { LayoutControls } from "./_components/sidebar/layout-controls";
 import { SearchDialog } from "./_components/sidebar/search-dialog";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 import AxiosProvider from "@/src/providers/use-axios-provider";
+import { auth } from "@/src/lib/auth";
+import { redirect } from "next/navigation";
+
 
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
+
+  const session = await auth();
+
+  if (session?.user?.role !== 'ADMIN') {
+    redirect('/');
+  }
+
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
