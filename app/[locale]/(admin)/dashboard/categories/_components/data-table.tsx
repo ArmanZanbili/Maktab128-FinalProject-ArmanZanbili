@@ -5,15 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
-
 import { Button } from "@/src/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { useDataTableInstance } from "@/src/hooks/use-data-table-instance";
 import { DataTable as DataTableNew } from "@/src/components/data-table/data-table";
 import { DataTablePagination } from "@/src/components/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/src/components/data-table/data-table-view-options";
-
-import { createCategory, updateCategory, deleteCategory } from "@/src/services/categoryService";
+import { createCategory, updateCategory, deleteCategory, getCategories } from "@/src/services/categoryService";
 import { CategoryDialog } from "./dialog";
 import { Category } from "@/types/movie";
 import { getCategoryColumns } from "./columns";
@@ -35,13 +33,58 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
     const router = useRouter();
 
     const [data, setData] = React.useState<Category[]>(() => initialData?.data?.categories || []);
+    const [pageCount, setPageCount] = React.useState<number>(initialData?.total_pages || 1);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [isAlertOpen, setIsAlertOpen] = React.useState(false);
     const [selectedCategory, setSelectedCategory] = React.useState<Category | null>(null);
+    const initialRender = React.useRef(true);
+    const [refetchTrigger, setRefetchTrigger] = React.useState(0);
 
     React.useEffect(() => {
         setData(initialData?.data?.categories || []);
+        setPageCount(initialData?.total_pages || 1);
     }, [initialData]);
+
+    const openDialog = (category: Category | null = null) => {
+        setSelectedCategory(category);
+        setIsDialogOpen(true);
+    };
+
+    const openAlertDialog = (category: Category) => {
+        setSelectedCategory(category);
+        setIsAlertOpen(true);
+    };
+
+    const columns = React.useMemo(() => getCategoryColumns({ openDialog, openAlertDialog }), []);
+
+    const table = useDataTableInstance({
+        data,
+        columns,
+        getRowId: (row) => row._id,
+        pageCount,
+    });
+
+    const { pageIndex, pageSize } = table.getState().pagination;
+
+
+    React.useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+
+        const fetchNewData = async () => {
+            try {
+                const newData = await getCategories(null, { page: pageIndex + 1, limit: pageSize });
+                setData(newData.data.categories);
+                setPageCount(newData.total_pages);
+            } catch (error) {
+                toast.error("Failed to fetch categories.");
+            }
+        };
+
+        fetchNewData();
+    }, [pageIndex, pageSize, refetchTrigger]);
 
     const handleFormSubmit = async (formData: FormData) => {
         try {
@@ -54,7 +97,7 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
             }
             setIsDialogOpen(false);
             setSelectedCategory(null);
-            router.refresh();
+            setRefetchTrigger(prev => prev + 1);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 409) {
                 toast.error("A category with this name already exists.");
@@ -70,7 +113,7 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
         try {
             await deleteCategory(selectedCategory._id);
             toast.success(tCommon("successDelete"));
-            router.refresh();
+            setRefetchTrigger(prev => prev + 1);
         } catch (error) {
             console.error("Failed to delete category:", error);
             toast.error(tCommon("errorDelete"));
@@ -79,19 +122,6 @@ export function CategoriesDataTable({ initialData }: { initialData: any }) {
             setSelectedCategory(null);
         }
     };
-
-    const openDialog = (category: Category | null = null) => {
-        setSelectedCategory(category);
-        setIsDialogOpen(true);
-    };
-
-    const openAlertDialog = (category: Category) => {
-        setSelectedCategory(category);
-        setIsAlertOpen(true);
-    };
-
-    const columns = React.useMemo(() => getCategoryColumns({ openDialog, openAlertDialog }), []);
-    const table = useDataTableInstance({ data, columns, getRowId: (row) => row._id });
 
     return (
         <Tabs defaultValue="all-categories" className="w-full flex-col justify-start gap-6">

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react'; // 👈 1. Import useSession
+import { toast } from 'react-toastify'; // 👈 2. Import toast for error handling
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form';
@@ -15,6 +17,7 @@ import { getCategories } from '@/src/services/categoryService';
 export function SubcategoryForm({ subcategory, onSubmit, onFinished }: { subcategory?: Subcategory | null; onSubmit: (data: SubcategoryFormValues) => void; onFinished: () => void; }) {
     const t = useTranslations('Admin.subcategories.form');
     const tValidation = useTranslations('Admin.validation');
+    const { data: session } = useSession(); // 👈 3. Get session data
     const [categories, setCategories] = useState<Category[]>([]);
 
     const form = useForm<SubcategoryFormValues>({
@@ -26,8 +29,19 @@ export function SubcategoryForm({ subcategory, onSubmit, onFinished }: { subcate
     });
 
     useEffect(() => {
-        getCategories({ limit: 100 }).then(res => setCategories(res.data.categories));
-    }, []);
+        async function fetchCategories() {
+            const token = session?.user?.accessToken;
+            if (token) {
+                try {
+                    const response = await getCategories(token, { limit: 100 });
+                    setCategories(response.data.categories);
+                } catch (error) {
+                    toast.error("Failed to load parent categories.");
+                }
+            }
+        }
+        fetchCategories();
+    }, [session]);
 
     const handleFormSubmit = (data: SubcategoryFormValues) => {
         onSubmit(data);

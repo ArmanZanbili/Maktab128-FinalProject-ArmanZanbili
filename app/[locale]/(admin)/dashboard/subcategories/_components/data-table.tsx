@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
-
 import { Button } from "@/src/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { useDataTableInstance } from "@/src/hooks/use-data-table-instance";
@@ -22,8 +21,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/src/components/ui/alert-dialog";
-
-import { createSubcategory, updateSubcategory, deleteSubcategory } from "@/src/services/subcategoryService";
+import { createSubcategory, updateSubcategory, deleteSubcategory, getSubcategories } from "@/src/services/subcategoryService";
 import { Category, Subcategory } from "@/types/movie";
 import { SubcategoryFormValues } from "@/src/validations/subcategory-validation";
 import { getSubcategoryColumns } from "./columns";
@@ -40,12 +38,16 @@ export function SubcategoriesDataTable({ initialSubcategories, allCategories }: 
     const router = useRouter();
 
     const [data, setData] = React.useState<Subcategory[]>(() => initialSubcategories?.data?.subcategories || []);
+    const [pageCount, setPageCount] = React.useState<number>(initialSubcategories?.total_pages || 1);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [isAlertOpen, setIsAlertOpen] = React.useState(false);
     const [selectedSubcategory, setSelectedSubcategory] = React.useState<Subcategory | null>(null);
+    const initialRender = React.useRef(true);
+    const [refetchTrigger, setRefetchTrigger] = React.useState(0);
 
     React.useEffect(() => {
         setData(initialSubcategories?.data?.subcategories || []);
+        setPageCount(initialSubcategories?.total_pages || 1);
     }, [initialSubcategories]);
 
     const categoryNameMap = React.useMemo(() => {
@@ -55,6 +57,47 @@ export function SubcategoriesDataTable({ initialSubcategories, allCategories }: 
         });
         return map;
     }, [allCategories]);
+
+    const openDialog = (subcategory: Subcategory | null = null) => {
+        setSelectedSubcategory(subcategory);
+        setIsDialogOpen(true);
+    };
+
+    const openAlertDialog = (subcategory: Subcategory) => {
+        setSelectedSubcategory(subcategory);
+        setIsAlertOpen(true);
+    };
+
+    const columns = React.useMemo(() => getSubcategoryColumns({ openDialog, openAlertDialog, categoryNameMap }), [categoryNameMap]);
+
+    const table = useDataTableInstance({
+        data,
+        columns,
+        getRowId: (row) => row._id,
+        pageCount,
+    });
+
+    const { pageIndex, pageSize } = table.getState().pagination;
+
+    React.useEffect(() => {
+
+        if (initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+
+        const fetchNewData = async () => {
+            try {
+                const newData = await getSubcategories(null, { page: pageIndex + 1, limit: pageSize });
+                setData(newData.data.subcategories);
+                setPageCount(newData.total_pages);
+            } catch (error) {
+                toast.error("Failed to fetch subcategories.");
+            }
+        };
+
+        fetchNewData();
+    }, [pageIndex, pageSize, refetchTrigger]);
 
     const handleFormSubmit = async (formData: SubcategoryFormValues) => {
         try {
@@ -67,7 +110,7 @@ export function SubcategoriesDataTable({ initialSubcategories, allCategories }: 
             }
             setIsDialogOpen(false);
             setSelectedSubcategory(null);
-            router.refresh();
+            setRefetchTrigger(prev => prev + 1);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 409) {
                 toast.error("A subcategory with this name already exists.");
@@ -83,7 +126,7 @@ export function SubcategoriesDataTable({ initialSubcategories, allCategories }: 
         try {
             await deleteSubcategory(selectedSubcategory._id);
             toast.success(tCommon("successDelete"));
-            router.refresh();
+            setRefetchTrigger(prev => prev + 1);
         } catch (error) {
             console.error("Failed to delete subcategory:", error);
             toast.error(tCommon("errorDelete"));
@@ -93,18 +136,6 @@ export function SubcategoriesDataTable({ initialSubcategories, allCategories }: 
         }
     };
 
-    const openDialog = (subcategory: Subcategory | null = null) => {
-        setSelectedSubcategory(subcategory);
-        setIsDialogOpen(true);
-    };
-
-    const openAlertDialog = (subcategory: Subcategory) => {
-        setSelectedSubcategory(subcategory);
-        setIsAlertOpen(true);
-    };
-
-    const columns = React.useMemo(() => getSubcategoryColumns({ openDialog, openAlertDialog, categoryNameMap }), [categoryNameMap]);
-    const table = useDataTableInstance({ data, columns, getRowId: (row) => row._id });
 
     return (
         <Tabs defaultValue="all-subcategories" className="w-full flex-col justify-start gap-6">
