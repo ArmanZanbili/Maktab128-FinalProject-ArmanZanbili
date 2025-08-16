@@ -70,8 +70,13 @@ export function MovieForm({
         formData.append('brand', data.brand);
         formData.append('description', data.description);
 
-        data.categories.forEach(catId => formData.append('categories[]', catId));
-        data.subcategories.forEach(subId => formData.append('subcategories[]', subId));
+        if (data.categories && Array.isArray(data.categories)) {
+            data.categories.forEach(catId => formData.append('categories', catId));
+        }
+
+        if (data.subcategories && Array.isArray(data.subcategories)) {
+            data.subcategories.forEach(subId => formData.append('subcategories', subId));
+        }
 
         if (data.thumbnail && data.thumbnail[0]) {
             formData.append('thumbnail', data.thumbnail[0]);
