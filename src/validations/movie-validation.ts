@@ -13,7 +13,10 @@ export const movieFormSchema = z.object({
             message: "Admin.validation.quantity_invalid",
         }),
     brand: z.string().min(2, "Admin.validation.brand_required"),
-    description: z.string().min(10, "Admin.validation.description_min_10"),
+    description: z.string().refine((html) => {
+        const strippedHtml = html.replace(/<[^>]+>/g, '');
+        return strippedHtml.length >= 10;
+    }, { message: "Admin.validation.description_min_10" }),
     categories: z.array(z.string()).min(1, "You must select at least one category."),
     subcategories: z.array(z.string()).min(1, "You must select at least one subcategory."),
     thumbnail: z.any().optional(),

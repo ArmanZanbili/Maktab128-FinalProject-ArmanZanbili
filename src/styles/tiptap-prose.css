@@ -1,0 +1,83 @@
+/* src/styles/tiptap-prose.css */
+
+.prose {
+  color: var(--foreground);
+}
+
+/* NEW: Heading Styles */
+.prose :where(h1, h2, h3):not(:where([class~="not-prose"] *)) {
+    color: var(--foreground);
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+.prose :where(h1):not(:where([class~="not-prose"] *)) {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem;
+}
+
+.prose :where(h2):not(:where([class~="not-prose"] *)) {
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem;
+}
+
+.prose :where(h3):not(:where([class~="not-prose"] *)) {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem;
+}
+
+/* Existing Styles */
+.prose :where(p):not(:where([class~="not-prose"] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.prose :where(ul):not(:where([class~="not-prose"] *)) {
+  list-style-type: disc;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+.prose :where(ol):not(:where([class~="not-prose"] *)) {
+  list-style-type: decimal;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+.prose :where(li):not(:where([class~="not-prose"] *)) {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose :where(strong):not(:where([class~="not-prose"] *)) {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose :where(em):not(:where([class~="not-prose"] *)) {
+  font-style: italic;
+}
+
+.dark .prose-invert {
+  color: var(--foreground);
+}
+
+.dark .prose-invert :where(h1, h2, h3, strong):not(:where([class~="not-prose"] *)) {
+    color: var(--foreground);
+}
+
+/* Fix for text wrapping */
+.ProseMirror {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal !important; 
+}
+
+/* Fix for top margin */
+.ProseMirror > :first-child {
+  margin-top: 0;
+}

@@ -6,13 +6,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 
 import { Input } from '@/src/components/ui/input';
-import { Textarea } from '@/src/components/ui/textarea';
 import { Button } from '@/src/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form';
 import { MultiSelect, MultiSelectOption } from '@/src/components/ui/multi-select';
 import { movieFormSchema, MovieFormValues } from '@/src/validations/movie-validation';
 import { Movie, Category, Subcategory } from '@/types/movie';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
+import { TiptapEditor } from '@/src/components/molecules/TiptapEditor';
+
+
 
 export function MovieForm({
     movie,
@@ -62,6 +64,8 @@ export function MovieForm({
             });
     }, [watchedCategories, categories, subcategories]);
 
+
+
     const handleFormSubmit: SubmitHandler<MovieFormValues> = (data) => {
         const formData = new FormData();
         formData.append('name', data.name);
@@ -81,6 +85,7 @@ export function MovieForm({
         if (data.thumbnail && data.thumbnail[0]) {
             formData.append('thumbnail', data.thumbnail[0]);
         }
+
         if (data.images && data.images.length > 0) {
             for (let i = 0; i < data.images.length; i++) {
                 formData.append('images', data.images[i]);
@@ -91,12 +96,14 @@ export function MovieForm({
         onFinished();
     };
 
+
     React.useEffect(() => {
         return () => {
             if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
             imagesPreview.forEach(url => URL.revokeObjectURL(url));
         };
     }, [thumbnailPreview, imagesPreview]);
+
 
     return (
         <Form {...form}>
@@ -134,6 +141,7 @@ export function MovieForm({
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={control}
                                 name="subcategories"
@@ -151,8 +159,15 @@ export function MovieForm({
                                 )}
                             />
                         </div>
+
                         <FormField control={control} name="description" render={({ field }) => (
-                            <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <TiptapEditor value={field.value} onChange={field.onChange} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )} />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="p-4 border rounded-lg space-y-2">
@@ -177,6 +192,7 @@ export function MovieForm({
                                 )}
                                 <FormMessage>{form.formState.errors.thumbnail?.message as string}</FormMessage>
                             </div>
+
                             <div className="p-4 border rounded-lg space-y-2">
                                 <FormLabel>Gallery Images</FormLabel>
                                 <FormControl>
@@ -193,6 +209,7 @@ export function MovieForm({
                                         }}
                                     />
                                 </FormControl>
+
                                 {imagesPreview.length > 0 && (
                                     <div className="mt-2 grid grid-cols-3 gap-2">
                                         {imagesPreview.map((url, index) => (
@@ -202,11 +219,13 @@ export function MovieForm({
                                         ))}
                                     </div>
                                 )}
+
                                 <FormMessage>{form.formState.errors.images?.message as string}</FormMessage>
                             </div>
                         </div>
                     </div>
                 </ScrollArea>
+
                 <div className="flex-shrink-0 pt-6">
                     <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting ? "Saving..." : "Save Movie"}
