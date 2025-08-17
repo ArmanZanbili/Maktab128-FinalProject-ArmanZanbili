@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useEffect } from "react";
 import axios from "axios";
 import { axiosInstance } from "../lib/axios";
@@ -28,6 +28,7 @@ const useAxiosAuth = () => {
 
                     try {
                         if (!session?.user.refreshToken) {
+                            await signOut({ redirect: false });
                             return Promise.reject(error);
                         }
 
@@ -50,6 +51,8 @@ const useAxiosAuth = () => {
                         return axiosInstance(prevRequest);
 
                     } catch (refreshError) {
+                        console.error("Token refresh failed, signing out.", refreshError);
+                        await signOut({ redirect: false });
                         return Promise.reject(refreshError);
                     }
                 }
