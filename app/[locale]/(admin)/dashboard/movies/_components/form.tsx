@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-
+import { X } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import { Button } from '@/src/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form';
@@ -13,8 +13,6 @@ import { movieFormSchema, MovieFormValues } from '@/src/validations/movie-valida
 import { Movie, Category, Subcategory } from '@/types/movie';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
 import { TiptapEditor } from '@/src/components/molecules/TiptapEditor';
-
-
 
 export function MovieForm({
     movie,
@@ -29,6 +27,7 @@ export function MovieForm({
     categories: Category[];
     subcategories: Subcategory[];
 }) {
+
     const [thumbnailPreview, setThumbnailPreview] = React.useState<string | null>(null);
     const [imagesPreview, setImagesPreview] = React.useState<string[]>([]);
 
@@ -47,11 +46,11 @@ export function MovieForm({
         },
     });
 
-    const { control, watch, register } = form;
+    const { control, watch, register, setValue, getValues } = form;
     const watchedCategories = watch("categories");
 
     const { ref: thumbnailRef, onChange: onThumbnailChange, ...thumbnailRest } = register("thumbnail");
-    const { ref: imagesRef, onChange: onImagesChange, ...imagesRest } = register("images");
+    const { ref: imagesRef, ...imagesRest } = register("images");
 
     const subcategoryOptions: MultiSelectOption[] = React.useMemo(() => {
         if (!watchedCategories || watchedCategories.length === 0) return [];
@@ -64,7 +63,21 @@ export function MovieForm({
             });
     }, [watchedCategories, categories, subcategories]);
 
+    const handleRemoveThumbnail = () => {
+        if (thumbnailPreview) {
+            URL.revokeObjectURL(thumbnailPreview);
+        }
+        setThumbnailPreview(null);
+        setValue('thumbnail', undefined, { shouldValidate: true });
+    };
 
+    const handleRemoveGalleryImage = (indexToRemove: number) => {
+        URL.revokeObjectURL(imagesPreview[indexToRemove]);
+        setImagesPreview(prev => prev.filter((_, index) => index !== indexToRemove));
+        const currentFiles = getValues('images') || [];
+        const updatedFiles = Array.from(currentFiles).filter((_, index) => index !== indexToRemove);
+        setValue('images', updatedFiles, { shouldValidate: true });
+    };
 
     const handleFormSubmit: SubmitHandler<MovieFormValues> = (data) => {
         const formData = new FormData();
@@ -77,25 +90,20 @@ export function MovieForm({
         if (data.categories && Array.isArray(data.categories)) {
             data.categories.forEach(catId => formData.append('categories', catId));
         }
-
         if (data.subcategories && Array.isArray(data.subcategories)) {
             data.subcategories.forEach(subId => formData.append('subcategories', subId));
         }
-
         if (data.thumbnail && data.thumbnail[0]) {
             formData.append('thumbnail', data.thumbnail[0]);
         }
-
         if (data.images && data.images.length > 0) {
             for (let i = 0; i < data.images.length; i++) {
                 formData.append('images', data.images[i]);
             }
         }
-
         onSubmit(formData);
         onFinished();
     };
-
 
     React.useEffect(() => {
         return () => {
@@ -103,7 +111,6 @@ export function MovieForm({
             imagesPreview.forEach(url => URL.revokeObjectURL(url));
         };
     }, [thumbnailPreview, imagesPreview]);
-
 
     return (
         <Form {...form}>
@@ -169,7 +176,8 @@ export function MovieForm({
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                             <div className="p-4 border rounded-lg space-y-2">
                                 <FormLabel>Thumbnail Image</FormLabel>
                                 <FormControl>
@@ -181,13 +189,22 @@ export function MovieForm({
                                         onChange={(e) => {
                                             onThumbnailChange(e);
                                             if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
-                                            setThumbnailPreview(e.target.files?.[0] ? URL.createObjectURL(e.target.files[0]) : null);
+                                            const file = e.target.files?.[0];
+                                            setThumbnailPreview(file ? URL.createObjectURL(file) : null);
                                         }}
                                     />
                                 </FormControl>
                                 {thumbnailPreview && (
                                     <div className="mt-2 relative aspect-video w-full">
                                         <Image src={thumbnailPreview} alt="Thumbnail preview" layout="fill" className="rounded-md object-cover" />
+                                        <button
+                                            type="button"
+                                            className="absolute z-10 top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/75 cursor-pointer"
+                                            onClick={handleRemoveThumbnail}
+                                        >
+                                            <span className="sr-only">Remove thumbnail</span>
+                                            <X className="h-3 w-3" />
+                                        </button>
                                     </div>
                                 )}
                                 <FormMessage>{form.formState.errors.thumbnail?.message as string}</FormMessage>
@@ -203,9 +220,13 @@ export function MovieForm({
                                         ref={imagesRef}
                                         {...imagesRest}
                                         onChange={(e) => {
-                                            onImagesChange(e);
-                                            imagesPreview.forEach(url => URL.revokeObjectURL(url));
-                                            setImagesPreview(e.target.files ? Array.from(e.target.files).map(file => URL.createObjectURL(file)) : []);
+                                            const newFiles = Array.from(e.target.files || []);
+                                            const currentFiles = getValues('images') || [];
+                                            const combinedFiles = [...currentFiles, ...newFiles];
+                                            setValue('images', combinedFiles, { shouldValidate: true });
+
+                                            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+                                            setImagesPreview(prev => [...prev, ...newPreviews]);
                                         }}
                                     />
                                 </FormControl>
@@ -215,11 +236,18 @@ export function MovieForm({
                                         {imagesPreview.map((url, index) => (
                                             <div key={index} className="relative aspect-square">
                                                 <Image src={url} alt={`Gallery preview ${index + 1}`} layout="fill" className="rounded-md object-cover" />
+                                                <button
+                                                    type="button"
+                                                    className="absolute z-10 top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/75 cursor-pointer"
+                                                    onClick={() => handleRemoveGalleryImage(index)}
+                                                >
+                                                    <span className="sr-only">Remove image {index + 1}</span>
+                                                    <X className="h-3 w-3" />
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
                                 )}
-
                                 <FormMessage>{form.formState.errors.images?.message as string}</FormMessage>
                             </div>
                         </div>

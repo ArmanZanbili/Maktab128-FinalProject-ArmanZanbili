@@ -6,10 +6,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import axios from "axios";
 import { Plus } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/src/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/components/ui/dialog";
 import { useDataTableInstance } from "@/src/hooks/use-data-table-instance";
 import { DataTable as DataTableNew } from "@/src/components/data-table/data-table";
 import { DataTablePagination } from "@/src/components/data-table/data-table-pagination";
@@ -17,9 +15,9 @@ import { DataTableViewOptions } from "@/src/components/data-table/data-table-vie
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/src/components/ui/alert-dialog";
 import { createMovie, updateMovie, deleteMovie, getMovies } from "@/src/services/movieService";
 import { MovieDialog } from "./dialog";
+import { LocalImageUploaderDialog } from "./image-picker-dialog";
 import { Movie, Category, Subcategory } from "@/types/movie";
 import { getMovieColumns } from "./columns";
-import { set } from "zod";
 
 export function MoviesDataTable({
   initialData,
@@ -39,9 +37,18 @@ export function MoviesDataTable({
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isAlertOpen, setIsAlertOpen] = React.useState(false);
   const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
-  const [previewImageUrl, setPreviewImageUrl] = React.useState<string | null>(null);
-  const initialRender = React.useRef(true);
   const [refetchTrigger, setRefetchTrigger] = React.useState(0);
+  const initialRender = React.useRef(true);
+
+  const [isImagePickerOpen, setIsImagePickerOpen] = React.useState(false);
+  const [movieForImageChange, setMovieForImageChange] = React.useState<Movie | null>(null);
+  const [thumbnailOverrides, setThumbnailOverrides] = React.useState<Record<string, string>>({});
+
+  React.useEffect(() => {
+    return () => {
+      Object.values(thumbnailOverrides).forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [thumbnailOverrides]);
 
   React.useEffect(() => {
     setData(initialData?.data?.products || []);
@@ -56,14 +63,23 @@ export function MoviesDataTable({
     setSelectedMovie(movie);
     setIsAlertOpen(true);
   };
-  const openImagePreview = (imageUrl: string) => {
-    setPreviewImageUrl(imageUrl);
+
+  const openImagePicker = (movie: Movie) => {
+    setMovieForImageChange(movie);
+    setIsImagePickerOpen(true);
   };
 
-  const columns = React.useMemo(() => getMovieColumns({ openDialog, openAlertDialog, openImagePreview }), []);
+  const columns = React.useMemo(() => getMovieColumns({ openDialog, openAlertDialog, openImagePicker }), []);
+
+  const displayedData = React.useMemo(() => {
+    return data.map(movie => ({
+      ...movie,
+      thumbnail: thumbnailOverrides[movie._id] || movie.thumbnail,
+    }));
+  }, [data, thumbnailOverrides]);
 
   const table = useDataTableInstance({
-    data,
+    data: displayedData,
     columns,
     getRowId: (row) => row._id,
     pageCount,
@@ -76,7 +92,6 @@ export function MoviesDataTable({
       initialRender.current = false;
       return;
     }
-
     const fetchNewData = async () => {
       try {
         const newData = await getMovies(null, { page: pageIndex + 1, limit: pageSize });
@@ -86,7 +101,6 @@ export function MoviesDataTable({
         toast.error("Failed to fetch movies.");
       }
     };
-
     fetchNewData();
   }, [pageIndex, pageSize, refetchTrigger]);
 
@@ -126,7 +140,21 @@ export function MoviesDataTable({
     }
   };
 
-
+  const handleThumbnailOverride = (movieId: string, file: File) => {
+    setThumbnailOverrides(prev => {
+      const oldUrl = prev[movieId];
+      if (oldUrl) {
+        URL.revokeObjectURL(oldUrl);
+      }
+      const newUrl = URL.createObjectURL(file);
+      return {
+        ...prev,
+        [movieId]: newUrl,
+      };
+    });
+    toast.success("Preview image updated for this session.");
+    setIsImagePickerOpen(false);
+  };
 
   return (
     <>
@@ -150,6 +178,7 @@ export function MoviesDataTable({
           <DataTablePagination table={table} />
         </TabsContent>
       </Tabs>
+
       {isDialogOpen && (
         <MovieDialog
           isOpen={isDialogOpen}
@@ -160,6 +189,14 @@ export function MoviesDataTable({
           subcategories={allSubcategories}
         />
       )}
+
+      <LocalImageUploaderDialog
+        isOpen={isImagePickerOpen}
+        onOpenChange={setIsImagePickerOpen}
+        movie={movieForImageChange}
+        onImageSelect={handleThumbnailOverride}
+      />
+
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -176,23 +213,6 @@ export function MoviesDataTable({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <Dialog open={!!previewImageUrl} onOpenChange={(isOpen) => !isOpen && setPreviewImageUrl(null)}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Image Preview</DialogTitle>
-          </DialogHeader>
-          {previewImageUrl && (
-            <div className="relative mt-4 h-96 w-full">
-              <Image
-                src={previewImageUrl}
-                alt="Movie Thumbnail Preview"
-                layout="fill"
-                className="object-contain"
-              />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
