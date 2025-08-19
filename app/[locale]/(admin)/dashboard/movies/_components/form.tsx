@@ -14,6 +14,12 @@ import { Movie, Category, Subcategory } from '@/types/movie';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
 import { TiptapEditor } from '@/src/components/molecules/TiptapEditor';
 
+async function urlToFile(url: string, filename: string, mimeType?: string): Promise<File> {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return new File([blob], filename, { type: mimeType || blob.type });
+}
+
 export function MovieForm({
     movie,
     onSubmit,
@@ -50,7 +56,7 @@ export function MovieForm({
     const watchedCategories = watch("categories");
 
     const { ref: thumbnailRef, onChange: onThumbnailChange, ...thumbnailRest } = register("thumbnail");
-    const { ref: imagesRef, ...imagesRest } = register("images");
+    const { ref: imagesRef, onChange: onImagesChange, ...imagesRest } = register("images");
 
     const subcategoryOptions: MultiSelectOption[] = React.useMemo(() => {
         if (!watchedCategories || watchedCategories.length === 0) return [];
@@ -75,8 +81,14 @@ export function MovieForm({
         URL.revokeObjectURL(imagesPreview[indexToRemove]);
         setImagesPreview(prev => prev.filter((_, index) => index !== indexToRemove));
         const currentFiles = getValues('images') || [];
-        const updatedFiles = Array.from(currentFiles).filter((_, index) => index !== indexToRemove);
-        setValue('images', updatedFiles, { shouldValidate: true });
+        if (!currentFiles) return;
+
+        const updatedFilesArray = Array.from(currentFiles).filter((_, index) => index !== indexToRemove);
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach(file => dataTransfer.items.add(file as File));
+        const newFileList = dataTransfer.files;
+
+        setValue('images', newFileList, { shouldValidate: true });
     };
 
     const handleFormSubmit: SubmitHandler<MovieFormValues> = (data) => {
@@ -97,9 +109,9 @@ export function MovieForm({
             formData.append('thumbnail', data.thumbnail[0]);
         }
         if (data.images && data.images.length > 0) {
-            for (let i = 0; i < data.images.length; i++) {
-                formData.append('images', data.images[i]);
-            }
+            Array.from(data.images).forEach(file => {
+                formData.append('images', file as File);
+            });
         }
         onSubmit(formData);
         onFinished();
@@ -111,6 +123,45 @@ export function MovieForm({
             imagesPreview.forEach(url => URL.revokeObjectURL(url));
         };
     }, [thumbnailPreview, imagesPreview]);
+
+    React.useEffect(() => {
+        if (movie) {
+            const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace('/api', '');
+
+            const initializeThumbnail = async () => {
+                if (movie.thumbnail && movie.thumbnail !== 'products-thumbnails-default.jpeg') {
+                    const thumbnailUrl = `${backendBaseUrl}/images/products/thumbnails/${movie.thumbnail}`;
+                    setThumbnailPreview(thumbnailUrl);
+
+                    const thumbnailFile = await urlToFile(thumbnailUrl, movie.thumbnail);
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(thumbnailFile);
+                    setValue('thumbnail', dataTransfer.files, { shouldValidate: true });
+                }
+            };
+
+            const initializeGallery = async () => {
+                if (movie.images && movie.images.length > 0 && movie.images[0] !== 'products-images-default.jpeg') {
+                    const imageUrls = movie.images.map(filename => `${backendBaseUrl}/images/products/images/${filename}`);
+                    setImagesPreview(imageUrls);
+
+                    const imageFiles = await Promise.all(
+                        movie.images.map(filename => {
+                            const url = `${backendBaseUrl}/images/products/images/${filename}`;
+                            return urlToFile(url, filename);
+                        })
+                    );
+
+                    const dataTransfer = new DataTransfer();
+                    imageFiles.forEach(file => dataTransfer.items.add(file as File));
+                    setValue('images', dataTransfer.files, { shouldValidate: true });
+                }
+            };
+
+            initializeThumbnail();
+            initializeGallery();
+        }
+    }, [movie, setValue]);
 
     return (
         <Form {...form}>
@@ -220,13 +271,11 @@ export function MovieForm({
                                         ref={imagesRef}
                                         {...imagesRest}
                                         onChange={(e) => {
-                                            const newFiles = Array.from(e.target.files || []);
-                                            const currentFiles = getValues('images') || [];
-                                            const combinedFiles = [...currentFiles, ...newFiles];
-                                            setValue('images', combinedFiles, { shouldValidate: true });
+                                            onImagesChange(e);
 
-                                            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
-                                            setImagesPreview(prev => [...prev, ...newPreviews]);
+                                            imagesPreview.forEach(url => URL.revokeObjectURL(url));
+                                            const newFiles = e.target.files;
+                                            setImagesPreview(newFiles ? Array.from(newFiles).map(file => URL.createObjectURL(file)) : []);
                                         }}
                                     />
                                 </FormControl>
@@ -256,7 +305,7 @@ export function MovieForm({
 
                 <div className="flex-shrink-0 pt-6">
                     <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? "Saving..." : "Save Movie"}
+                        {form.formState.isSubmitting ? "Saving..." : (movie ? "Edit Movie" : "Save Movie")}
                     </Button>
                 </div>
             </form>
