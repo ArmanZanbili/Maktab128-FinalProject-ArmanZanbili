@@ -4,15 +4,13 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Movie } from '@/types/movie';
 import { FaCartPlus } from 'react-icons/fa6';
 import { Button } from '../ui/button';
 
 export function MovieCard({ movie }: { movie: Movie }) {
-
     if (!movie) return null;
-
     const t = useTranslations('HomePage');
     const [isAdded, setIsAdded] = useState(false);
 
@@ -35,7 +33,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
     return (
         <div className="group relative w-full">
-            <Link href="#" className="block space-y-3">
+            <Link href={`/movies/${movie._id}`} className="block space-y-3">
                 <div className="overflow-hidden rounded-md">
                     <Image
                         src={imageUrl}

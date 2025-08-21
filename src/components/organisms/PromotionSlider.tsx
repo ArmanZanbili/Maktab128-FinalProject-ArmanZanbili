@@ -55,7 +55,7 @@ export function PromotionSlider({ movies }: PromotionSliderProps) {
                                         <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">{movie.name}</h2>
                                         <p className="mt-4 max-w-2xl text-lg text-gray-200">{cleanDescription}</p>
                                         <Button asChild size="lg" className="mt-8">
-                                            <Link href="#">View Movie</Link>
+                                            <Link href={`/movies/${movie._id}`}>View Movie</Link>
                                         </Button>
                                     </div>
                                 </div>

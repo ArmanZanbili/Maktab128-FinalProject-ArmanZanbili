@@ -33,9 +33,8 @@ export async function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/95 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-muted/95 backdrop-blur-sm">
             <div className="flex h-16 items-center px-4 md:px-8">
-                {/* Left Side */}
                 <div className="flex items-center gap-2">
                     <SidebarTrigger />
                     <Link href="/" className="flex items-center gap-2">
@@ -48,7 +47,7 @@ export async function Header() {
                         <Input
                             type="search"
                             placeholder="Search movies..."
-                            className="w-full rounded-full pl-10"
+                            className="w-full rounded-full pl-10 bg-card"
                         />
                         <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                     </div>

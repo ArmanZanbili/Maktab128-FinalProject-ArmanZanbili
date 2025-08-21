@@ -1,11 +1,21 @@
 import { axiosInstance } from '@/src/lib/axios';
 import { axiosServerInstance } from '@/src/lib/axios-server';
+
 export const getMovies = async (accessToken: string | null, params = {}) => {
     const headers: { Authorization?: string } = {};
     if (accessToken) {
         headers.Authorization = `Bearer ${accessToken}`;
     }
     const response = await axiosServerInstance.get('/products', { params, headers });
+    return response.data;
+};
+
+export const getMovieById = async (movieId: string, accessToken: string | null) => {
+    const headers: { Authorization?: string } = {};
+    if (accessToken) {
+        headers.Authorization = `Bearer ${accessToken}`;
+    }
+    const response = await axiosServerInstance.get(`/products/${movieId}`, { headers });
     return response.data;
 };
 
