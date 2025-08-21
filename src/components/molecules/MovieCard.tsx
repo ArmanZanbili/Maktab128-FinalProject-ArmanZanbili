@@ -1,18 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { toast } from 'sonner';
 import { Movie } from '@/types/movie';
 import { FaCartPlus } from 'react-icons/fa6';
 import { Button } from '../ui/button';
+import { useCartStore } from '@/src/stores/cart-store';
 
 export function MovieCard({ movie }: { movie: Movie }) {
     if (!movie) return null;
     const t = useTranslations('HomePage');
-    const [isAdded, setIsAdded] = useState(false);
+    const addToCart = useCartStore((state) => state.addToCart);
 
     const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace('/api', '');
     const imageUrl = movie.thumbnail.startsWith('http') || movie.thumbnail.startsWith('blob:')
@@ -27,8 +26,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
     const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         e.preventDefault();
-        toast.success(t('addedToCart'));
-        setIsAdded(true);
+        addToCart(movie, 1);
     };
 
     return (
@@ -53,7 +51,6 @@ export function MovieCard({ movie }: { movie: Movie }) {
                             size="icon"
                             className="h-9 w-9 shrink-0"
                             aria-label={t('buyNow')}
-                            disabled={isAdded}
                         >
                             <FaCartPlus className="h-4 w-4" />
                         </Button>

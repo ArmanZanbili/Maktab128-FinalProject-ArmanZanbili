@@ -6,10 +6,14 @@ import { Movie, Category, Subcategory } from '@/types/movie';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
 import { FaCartPlus, FaPlay } from 'react-icons/fa6';
-import { toast } from 'sonner';
+import { useCartStore } from '@/src/stores/cart-store';
+import { QuantitySelector } from '../molecules/QuantitySelector';
 
 export function MovieDetailTemplate({ movie }: { movie: Movie }) {
     const [selectedImage, setSelectedImage] = React.useState(movie.thumbnail);
+    const [quantity, setQuantity] = React.useState(1);
+    const addToCart = useCartStore((state) => state.addToCart);
+
     const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace('/api', '');
 
     const getImageUrl = (imagePath: string) => {
@@ -34,7 +38,7 @@ export function MovieDetailTemplate({ movie }: { movie: Movie }) {
     }).format(movie.price);
 
     const handleAddToCart = () => {
-        toast.success(`${movie.name} added to cart!`);
+        addToCart(movie, quantity);
     };
 
     const renderCategoryBadge = (category: string | Category | Subcategory) => {
@@ -46,7 +50,7 @@ export function MovieDetailTemplate({ movie }: { movie: Movie }) {
     return (
         <div className="container mx-auto max-w-6xl px-4 py-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-
+                {/* Image Gallery */}
                 <div>
                     <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4">
                         <Image
@@ -80,30 +84,35 @@ export function MovieDetailTemplate({ movie }: { movie: Movie }) {
                         {movie.categories.map(renderCategoryBadge)}
                         {movie.subcategories.map(renderCategoryBadge)}
                     </div>
-
                     <h1 className="text-4xl font-extrabold tracking-tight mb-3">{movie.name}</h1>
-
                     <p className="text-lg text-muted-foreground mb-6">
                         Studio: <span className="font-semibold text-foreground">{movie.brand}</span>
                     </p>
-
                     <div className="prose prose-invert max-w-none text-muted-foreground mb-6" dangerouslySetInnerHTML={{ __html: movie.description }} />
-
                     <div className="mt-auto pt-6">
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-3xl font-bold text-primary">{formattedPrice}</span>
                             <Badge variant="outline">In Stock: {movie.quantity}</Badge>
                         </div>
-                        <div className="flex gap-4">
-                            <Button size="lg" className="flex-1" onClick={handleAddToCart}>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <div>
+                                <QuantitySelector
+                                    onValueChange={setQuantity}
+                                    maxValue={movie.quantity}
+                                />
+                                <p className="text-xs text-muted-foreground mt-2 text-center">
+                                    ({movie.quantity} available)
+                                </p>
+                            </div>
+                            <Button size="lg" className="flex-1" onClick={handleAddToCart} disabled={movie.quantity === 0}>
                                 <FaCartPlus className="mr-2 h-5 w-5" />
-                                Add to Cart
-                            </Button>
-                            <Button size="lg" variant="outline" className="flex-1">
-                                <FaPlay className="mr-2 h-5 w-5" />
-                                Watch Trailer
+                                {movie.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
                             </Button>
                         </div>
+                        <Button size="lg" variant="outline" className="w-full mt-4">
+                            <FaPlay className="mr-2 h-5 w-5" />
+                            Watch Trailer
+                        </Button>
                     </div>
                 </div>
             </div>
