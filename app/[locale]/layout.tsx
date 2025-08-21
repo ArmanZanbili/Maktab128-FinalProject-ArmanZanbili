@@ -9,6 +9,7 @@ import { PreferencesStoreProvider } from '@/src/stores/preferences-provider';
 import { getPreference } from '@/src/server/server-actions';
 import { THEME_MODE_VALUES, THEME_PRESET_VALUES, type ThemePreset, type ThemeMode } from '@/types/theme';
 import { Toaster } from '@/src/components/ui/sonner';
+import { ThemeProvider } from '@/src/providers/ThemeProvider';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -30,26 +31,32 @@ export default async function LocaleLayout({ children }: Props) {
     const locale = await getLocale();
     const messages = await getMessages();
 
-    const themeMode = await getPreference<ThemeMode>("theme_mode", THEME_MODE_VALUES, "light");
+    const themeMode = await getPreference<ThemeMode>("theme_mode", THEME_MODE_VALUES, "dark");
     const themePreset = await getPreference<ThemePreset>("theme_preset", THEME_PRESET_VALUES, "default");
 
     return (
         <html
             lang={locale}
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            className={`${inter.variable} ${sahel.variable} ${themeMode === "dark" ? "dark" : ""}`}
-            data-theme-preset={themePreset}
+            className={`${inter.variable} ${sahel.variable}`}
             suppressHydrationWarning
         >
             <body className={locale === 'fa' ? 'font-sahel' : 'font-sans'}>
-                <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
-                    <SessionProvider>
-                        <NextIntlClientProvider locale={locale} messages={messages}>
-                            {children}
-                            <Toaster />
-                        </NextIntlClientProvider>
-                    </SessionProvider>
-                </PreferencesStoreProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme={themeMode}
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
+                        <SessionProvider>
+                            <NextIntlClientProvider locale={locale} messages={messages}>
+                                {children}
+                                <Toaster />
+                            </NextIntlClientProvider>
+                        </SessionProvider>
+                    </PreferencesStoreProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

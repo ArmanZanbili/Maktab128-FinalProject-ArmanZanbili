@@ -1,11 +1,10 @@
-import { Hero } from '@/src/components/organisms/Hero';
-import { MovieGrid } from '@/src/components/organisms/MovieGrid';
+import { getMovies } from '@/src/services/movieService';
+import { Movie } from '@/types/movie';
+import { HomePageTemplate } from '@/src/components/templates/HomePageTemplate';
 
-export default function HomePage() {
-  return (
-    <>
-      <Hero />
-      <MovieGrid />
-    </>
-  );
+export default async function HomePage() {
+  const moviesResponse = await getMovies(null, { limit: 12 });
+  const movies: Movie[] = moviesResponse?.data?.products || [];
+
+  return <HomePageTemplate movies={movies} />;
 }

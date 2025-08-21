@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/src/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/src/components/ui/dropdown-menu';
 import { Link } from '@/i18n/navigation';
-import { FaUser, FaRightFromBracket } from 'react-icons/fa6';
+import { FaUser, FaRightFromBracket, FaCartShopping } from 'react-icons/fa6';
 
 export function UserMenu({ username }: { username?: string | null }) {
     const t = useTranslations('Navigation');
@@ -25,6 +25,12 @@ export function UserMenu({ username }: { username?: string | null }) {
                     <Link href="/profile">
                         <FaUser className="mr-2 h-4 w-4" />
                         <span>{tHeader('profile')}</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/cart">
+                        <FaCartShopping className="mr-2 h-4 w-4" />
+                        <span>{t('basket')}</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
