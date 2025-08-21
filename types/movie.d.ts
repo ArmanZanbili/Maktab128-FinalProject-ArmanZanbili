@@ -16,11 +16,13 @@ export type Category = {
     _id: string;
     name: string;
     icon?: string;
+    slugname: string;
 };
 
 export type Subcategory = {
     _id: string;
     name: string;
+    slugname: string;
     category: string | category;
 };
 
