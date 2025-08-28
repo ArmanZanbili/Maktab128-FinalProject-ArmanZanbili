@@ -38,3 +38,13 @@ export type Movie = {
     thumbnail: string;
     images: string[];
 };
+
+export type User = {
+    _id: string;
+    firstname: string;
+    lastname: string;
+    username: string;
+    phoneNumber: string;
+    address: string;
+    role: 'USER' | 'ADMIN';
+};

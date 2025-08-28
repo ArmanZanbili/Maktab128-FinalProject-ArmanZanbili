@@ -64,7 +64,7 @@ const useAxiosAuth = () => {
             axiosInstance.interceptors.request.eject(requestIntercept);
             axiosInstance.interceptors.response.eject(responseIntercept);
         };
-    }, [session, update]);
+    }, [session?.user?.accessToken, session?.user?.refreshToken, update]);
 
     return axiosInstance;
 };

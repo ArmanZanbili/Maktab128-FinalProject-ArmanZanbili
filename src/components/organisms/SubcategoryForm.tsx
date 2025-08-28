@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useSession } from 'next-auth/react'; // 👈 1. Import useSession
-import { toast } from 'react-toastify'; // 👈 2. Import toast for error handling
+import { useSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form';
@@ -17,7 +17,7 @@ import { getCategories } from '@/src/services/categoryService';
 export function SubcategoryForm({ subcategory, onSubmit, onFinished }: { subcategory?: Subcategory | null; onSubmit: (data: SubcategoryFormValues) => void; onFinished: () => void; }) {
     const t = useTranslations('Admin.subcategories.form');
     const tValidation = useTranslations('Admin.validation');
-    const { data: session } = useSession(); // 👈 3. Get session data
+    const { data: session } = useSession();
     const [categories, setCategories] = useState<Category[]>([]);
 
     const form = useForm<SubcategoryFormValues>({
@@ -41,7 +41,7 @@ export function SubcategoryForm({ subcategory, onSubmit, onFinished }: { subcate
             }
         }
         fetchCategories();
-    }, [session]);
+    }, [session?.user?.accessToken]);
 
     const handleFormSubmit = (data: SubcategoryFormValues) => {
         onSubmit(data);

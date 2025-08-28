@@ -21,3 +21,10 @@ export const createOrder = async (userId: string, items: CartItem[]) => {
     const response = await axiosInstance.post('/orders', payload);
     return response.data;
 };
+
+export const getOrdersByUser = async (userId: string) => {
+    const response = await axiosInstance.get('/orders', {
+        params: { user: userId, sort: '-createdAt' }
+    });
+    return response.data;
+};
