@@ -6,17 +6,19 @@ import { ArchivePageTemplate } from "@/src/components/templates/ArchivePageTempl
 import { Category } from "@/types/movie";
 
 type Props = {
-    params: {
+    params: Promise<{
         categorySlug: string;
-    };
+    }>;
 };
 
 export default async function CategoryPage({ params }: Props) {
+    const resolvedParams = await params;
+    const { categorySlug } = resolvedParams;
     const session = await auth();
     const token = session?.user.accessToken ?? null;
 
     const categoriesResponse = await getCategories(token);
-    const category = categoriesResponse.data.categories.find((cat: Category) => cat.slugname === params.categorySlug);
+    const category = categoriesResponse.data.categories.find((cat: Category) => cat.slugname === categorySlug);
 
     if (!category) {
         notFound();

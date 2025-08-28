@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/src/comp
 import { Separator } from '@/src/components/ui/separator';
 import { QuantitySelector } from '@/src/components/molecules/QuantitySelector';
 import { FaTrash } from 'react-icons/fa6';
-import { createOrder } from '@/src/services/orderService';
 import { toast } from 'sonner';
 import { Link } from '@/i18n/navigation';
 
@@ -18,7 +17,6 @@ export function CartPageTemplate() {
     const { data: session } = useSession();
     const router = useRouter();
     const { items, removeFromCart, updateItemQuantity, clearCart } = useCartStore();
-    const [isProcessing, setIsProcessing] = React.useState(false);
 
     const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace('/api', '');
 
@@ -32,17 +30,7 @@ export function CartPageTemplate() {
             router.push('/login');
             return;
         }
-        setIsProcessing(true);
-        try {
-            await createOrder(session.user.id, validItems);
-            toast.success("Order placed successfully!");
-            clearCart();
-            router.push('/');
-        } catch (error) {
-            toast.error("There was an issue placing your order. Please try again.");
-        } finally {
-            setIsProcessing(false);
-        }
+        router.push('/checkout');
     };
 
     return (
@@ -132,9 +120,9 @@ export function CartPageTemplate() {
                                     className="w-full"
                                     size="lg"
                                     onClick={handleCheckout}
-                                    disabled={isProcessing}
+                                    disabled={validItems.length === 0}
                                 >
-                                    {isProcessing ? "Processing..." : "Proceed to Checkout"}
+                                    Proceed to Checkout
                                 </Button>
                             </CardFooter>
                         </Card>

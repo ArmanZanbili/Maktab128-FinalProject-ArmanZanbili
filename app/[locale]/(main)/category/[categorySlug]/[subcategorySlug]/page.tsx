@@ -7,25 +7,27 @@ import { ArchivePageTemplate } from "@/src/components/templates/ArchivePageTempl
 import { Category, Subcategory } from "@/types/movie";
 
 type Props = {
-    params: {
+    params: Promise<{
         categorySlug: string;
         subcategorySlug: string;
-    };
+    }>;
 };
 
 export default async function SubcategoryInCategoryPage({ params }: Props) {
+    const resolvedParams = await params;
+    const { categorySlug, subcategorySlug } = resolvedParams;
     const session = await auth();
     const token = session?.user.accessToken ?? null;
 
     try {
-        const categoryResponse = await getCategories(token, { slugname: params.categorySlug });
+        const categoryResponse = await getCategories(token, { slugname: categorySlug });
         if (!categoryResponse.data.categories || categoryResponse.data.categories.length === 0) {
             notFound();
         }
         const category: Category = categoryResponse.data.categories[0];
 
         const subcategoryResponse = await getSubcategories(token, {
-            slugname: params.subcategorySlug,
+            slugname: subcategorySlug,
             category: category._id
         });
         if (!subcategoryResponse.data.subcategories || subcategoryResponse.data.subcategories.length === 0) {

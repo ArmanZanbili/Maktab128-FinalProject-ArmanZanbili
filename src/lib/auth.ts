@@ -36,6 +36,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             role: user.role,
                             accessToken: token.accessToken,
                             refreshToken: token.refreshToken,
+                            firstname: user.firstname,
+                            lastname: user.lastname,
+                            address: user.address,
                         };
                     } catch (error) {
                         console.error("Authorize Error:", error);
@@ -53,6 +56,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 token.role = user.role;
                 token.accessToken = user.accessToken;
                 token.refreshToken = user.refreshToken;
+                token.firstname = user.firstname;
+                token.lastname = user.lastname;
+                token.address = user.address;
             }
             return token;
         },
@@ -62,6 +68,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 session.user.role = token.role as string;
                 session.user.accessToken = token.accessToken as string;
                 session.user.refreshToken = token.refreshToken as string;
+                session.user.firstname = token.firstname;
+                session.user.lastname = token.lastname;
+                session.user.address = token.address;
             }
             return session;
         },
