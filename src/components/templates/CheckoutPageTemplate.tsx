@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from '@/i18n/navigation';
 import { useCartStore } from '@/src/stores/cart-store';
 import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/src/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/src/components/ui/card';
 import { Separator } from '@/src/components/ui/separator';
 import { toast } from 'sonner';
 import { Input } from '../ui/input';
@@ -14,6 +14,9 @@ import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
+import { PersianDatePicker } from '../molecules/PersianDatePicker';
+import { DayRange } from '@hassanmojab/react-modern-calendar-datepicker';
+
 
 export function CheckoutPageTemplate() {
     const { data: session } = useSession();
@@ -23,6 +26,11 @@ export function CheckoutPageTemplate() {
     const [address, setAddress] = React.useState('');
     const [discountCode, setDiscountCode] = React.useState('');
     const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace('/api', '');
+
+    const [selectedDayRange, setSelectedDayRange] = React.useState<DayRange>({
+        from: null,
+        to: null,
+    });
 
     const validItems = items.filter(item => item && item.movie && typeof item.movie.price === 'number');
     const subtotal = validItems.reduce((acc, item) => acc + item.movie.price * item.quantity, 0);
@@ -38,7 +46,7 @@ export function CheckoutPageTemplate() {
         if (session?.user?.address) {
             setAddress(session.user.address);
         }
-    }, [session]);
+    }, [session?.user?.address]);
 
     const handlePlaceOrder = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,9 +63,16 @@ export function CheckoutPageTemplate() {
             toast.error("Please enter a shipping address.");
             return;
         }
+        if (!selectedDayRange?.from) {
+            toast.error("Please select a delivery date.");
+            return;
+        }
 
         setIsProcessing(true);
         try {
+
+            const deliveryDate = selectedDayRange.from;
+
             const response = await fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,6 +80,7 @@ export function CheckoutPageTemplate() {
                     items: validItems,
                     shippingAddress: address,
                     discountCode: discountCode,
+                    deliveryDate: deliveryDate,
                 }),
             });
 
@@ -113,6 +129,19 @@ export function CheckoutPageTemplate() {
                                     />
                                 </div>
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Select Delivery Date</CardTitle>
+                            <CardDescription>Choose a convenient date range for your delivery.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <PersianDatePicker
+                                selectedDayRange={selectedDayRange}
+                                setSelectedDayRange={setSelectedDayRange}
+                            />
                         </CardContent>
                     </Card>
                 </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/src/lib/dbConnect';
 import Order from '@/src/models/order';
-import product from '@/src/models/product';
+import Product from '@/src/models/product';
 import { auth } from '@/src/lib/auth';
 import { Movie } from '@/types/movie';
 
@@ -20,20 +20,26 @@ export async function POST(request: Request) {
 
     try {
         const body = await request.json();
-        const { items, shippingAddress, discountCode }: { items: CartItemPayload[], shippingAddress: string, discountCode?: string } = body;
+
+        const { items, shippingAddress, discountCode, deliveryDate }: {
+            items: CartItemPayload[],
+            shippingAddress: string,
+            discountCode?: string,
+            deliveryDate?: string,
+        } = body;
 
         if (!items || items.length === 0 || !shippingAddress) {
             return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
         }
 
-        const productDetails = await product.find({
+        const productDetails = await Product.find({
             '_id': { $in: items.map(item => item.movie._id) }
         });
 
         const priceMap = productDetails.reduce((map, product) => {
             map[product._id.toString()] = product.price;
             return map;
-        }, {});
+        }, {} as Record<string, number>);
 
         let totalPrice = items.reduce((acc, item) => {
             const price = priceMap[item.movie._id] || 0;
@@ -53,6 +59,7 @@ export async function POST(request: Request) {
             shippingAddress,
             discountCode,
             totalPrice,
+            deliveryDate: deliveryDate ? new Date(deliveryDate) : undefined,
         });
 
         await newOrder.save();
