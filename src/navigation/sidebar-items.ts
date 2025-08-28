@@ -4,6 +4,7 @@ import {
   Clapperboard,
   type LucideIcon,
   Warehouse,
+  ClipboardList,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -40,6 +41,11 @@ export const sidebarItems: NavGroup[] = [
         title: "Movies",
         url: "/dashboard/movies",
         icon: Clapperboard,
+      },
+      {
+        title: "Orders",
+        url: "/dashboard/orders",
+        icon: ClipboardList,
       },
       {
         title: "Category",

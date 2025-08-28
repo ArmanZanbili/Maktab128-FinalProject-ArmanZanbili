@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
 import { PersianDatePicker } from '../molecules/PersianDatePicker';
 import { DayRange } from '@hassanmojab/react-modern-calendar-datepicker';
+import moment from 'jalali-moment';
 
 
 export function CheckoutPageTemplate() {
@@ -71,7 +72,7 @@ export function CheckoutPageTemplate() {
         setIsProcessing(true);
         try {
 
-            const deliveryDate = selectedDayRange.from;
+            const deliveryDateFrom = moment.from(`${selectedDayRange.from.year}/${selectedDayRange.from.month}/${selectedDayRange.from.day}`, 'fa', 'YYYY/MM/DD').toDate();
 
             const response = await fetch('/api/orders', {
                 method: 'POST',
@@ -80,19 +81,20 @@ export function CheckoutPageTemplate() {
                     items: validItems,
                     shippingAddress: address,
                     discountCode: discountCode,
-                    deliveryDate: deliveryDate,
+                    deliveryDate: deliveryDateFrom,
                 }),
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create order');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create order');
             }
 
             toast.success("Order placed successfully! Thank you for your purchase.");
             clearCart();
             router.push('/');
-        } catch (error) {
-            toast.error("There was an issue placing your order. Please try again.");
+        } catch (error: any) {
+            toast.error(`Order Failed: ${error.message}`);
         } finally {
             setIsProcessing(false);
         }
@@ -137,7 +139,7 @@ export function CheckoutPageTemplate() {
                             <CardTitle>Select Delivery Date</CardTitle>
                             <CardDescription>Choose a convenient date range for your delivery.</CardDescription>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex justify-center">
                             <PersianDatePicker
                                 selectedDayRange={selectedDayRange}
                                 setSelectedDayRange={setSelectedDayRange}
